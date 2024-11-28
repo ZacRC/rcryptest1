@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolForge | Trending Coins</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/phosphor-icons"></script>
+    <style>
+        /* Include the same styles as index.html */
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(125deg, #000000, #13073A, #1A0B3E);
+            min-height: 100vh;
+        }
+        .sol-glow { box-shadow: 0 0 25px rgba(153, 69, 255, 0.3); }
+        .gradient-border {
+            background: linear-gradient(180deg, rgba(153, 69, 255, 0.3), rgba(20, 241, 149, 0.3));
+            padding: 1px;
+        }
+    </style>
+</head>
+<body class="text-gray-200">
+    <!-- Same Navigation as index.html -->
+    <nav class="border-b border-purple-500/10 backdrop-blur-xl fixed w-full z-10">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="text-2xl font-bold bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent">
+                    SolForge
+                </div>
+                <div class="flex items-center gap-6">
+                    <a href="/" class="text-purple-300 hover:text-purple-200 transition-colors">Launch</a>
+                    <a href="/coins" class="text-purple-300 hover:text-purple-200 transition-colors">Coins</a>
+                    <a href="/guide" class="text-purple-300 hover:text-purple-200 transition-colors">Guide</a>
+                    <a href="/docs" class="text-purple-300 hover:text-purple-200 transition-colors">Docs</a>
+                    <div class="h-4 w-px bg-purple-500/20"></div>
+                    <span class="text-sm text-purple-300">Solana Network</span>
+                    <button onclick="connectWallet()" 
+                            id="walletButton"
+                            class="bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-6 py-2 rounded-xl transition-all duration-300 sol-glow flex items-center gap-2">
+                        <i class="ph-wallet"></i>
+                        <span>Connect Wallet</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 pt-32">
+        <div class="text-center mb-16">
+            <h1 class="text-6xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-500 to-green-400 bg-clip-text text-transparent">
+                Trending Coins
+            </h1>
+            <p class="text-purple-300/60 max-w-2xl mx-auto">
+                Discover the latest and most popular tokens launched through SolForge
+            </p>
+        </div>
+
+        <!-- Add after the title section -->
+        <div class="mb-12">
+            <!-- Search and Filter Bar -->
+            <div class="gradient-border rounded-3xl mb-8">
+                <div class="bg-[#0d0926] rounded-3xl p-4">
+                    <div class="flex flex-wrap gap-4 items-center justify-between">
+                        <div class="flex-1 min-w-[200px]">
+                            <div class="relative">
+                                <input type="text" 
+                                       placeholder="Search tokens..." 
+                                       class="w-full px-4 py-3 rounded-xl input-field focus:outline-none pl-10">
+                                <i class="ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-purple-400"></i>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <select class="px-4 py-3 rounded-xl input-field focus:outline-none bg-[#0d0926]">
+                                <option>Market Cap</option>
+                                <option>Volume</option>
+                                <option>Latest</option>
+                            </select>
+                            <button class="bg-gradient-to-r from-purple-600 to-green-500 px-6 py-3 rounded-xl">
+                                Filter
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Market Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="gradient-border rounded-3xl">
+                    <div class="bg-[#0d0926] rounded-3xl p-6">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="ph-chart-line-up text-2xl text-purple-400"></i>
+                            <h4 class="font-medium text-purple-200">Total Market Cap</h4>
+                        </div>
+                        <p class="text-2xl font-bold text-purple-100">$1.23B</p>
+                        <p class="text-sm text-green-400">+5.2% (24h)</p>
+                    </div>
+                </div>
+                <!-- Add two more similar stat boxes -->
+            </div>
+
+            <!-- Enhanced Coin Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Add multiple coin cards with hover effects and more details -->
+                <div class="gradient-border rounded-3xl group hover:scale-[1.02] transition-all duration-300">
+                    <div class="bg-[#0d0926] rounded-3xl p-6">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
+                                <i class="ph-coin text-2xl text-purple-400"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-purple-200">Sample Token</h3>
+                                <span class="text-sm text-purple-300/60">$SAMPLE</span>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-purple-300/60">Market Cap</span>
+                                <span class="text-purple-200">$1,234,567</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-purple-300/60">24h Volume</span>
+                                <span class="text-purple-200">$234,567</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-purple-300/60">Price</span>
+                                <span class="text-green-400">$0.12 (+5.2%)</span>
+                            </div>
+                        </div>
+                        <button class="w-full mt-4 bg-gradient-to-r from-purple-600 to-green-500 hover:from-purple-700 hover:to-green-600 py-2 rounded-xl font-medium transition-all duration-300">
+                            View Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add pagination -->
+        <div class="flex justify-center gap-2 mt-12">
+            <button class="px-4 py-2 rounded-xl bg-purple-900/20 hover:bg-purple-900/30 transition-all">
+                Previous
+            </button>
+            <button class="px-4 py-2 rounded-xl bg-purple-500 text-white">1</button>
+            <button class="px-4 py-2 rounded-xl bg-purple-900/20 hover:bg-purple-900/30 transition-all">2</button>
+            <button class="px-4 py-2 rounded-xl bg-purple-900/20 hover:bg-purple-900/30 transition-all">3</button>
+            <button class="px-4 py-2 rounded-xl bg-purple-900/20 hover:bg-purple-900/30 transition-all">
+                Next
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="container mx-auto px-6 py-8 border-t border-purple-500/10 mt-20">
+        <div class="text-center text-purple-300/60">
+            © 2024 SolForge. Powered by Solana.
+        </div>
+    </footer>
+
+    <!-- Include the same wallet connection script as index.html -->
+    <script>
+        // ... wallet connection code ...
+    </script>
+</body>
+</html>

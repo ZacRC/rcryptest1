@@ -1,0 +1,13 @@
+# .gitignore
+
+# Environment variables
+.env
+
+# Python caches
+__pycache__/
+*.pyc
+
+# Django stuff
+*.log
+staticfiles/
+media/

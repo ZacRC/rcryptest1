@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolForge | Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/phosphor-icons"></script>
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(125deg, #000000, #13073A, #1A0B3E);
+            min-height: 100vh;
+        }
+        .sol-glow { box-shadow: 0 0 25px rgba(153, 69, 255, 0.3); }
+        .gradient-border {
+            background: linear-gradient(180deg, rgba(153, 69, 255, 0.3), rgba(20, 241, 149, 0.3));
+            padding: 1px;
+        }
+        .doc-content h2 {
+            @apply text-2xl font-bold text-purple-200 mb-4 mt-8;
+        }
+        .doc-content h3 {
+            @apply text-xl font-semibold text-purple-300 mb-3 mt-6;
+        }
+        .doc-content p {
+            @apply text-purple-300/60 mb-4 leading-relaxed;
+        }
+        .doc-content code {
+            @apply bg-purple-900/30 px-2 py-1 rounded-md text-purple-200 text-sm;
+        }
+        .doc-content pre {
+            @apply bg-[#0d0926] p-4 rounded-xl mb-4 overflow-x-auto border border-purple-500/20;
+        }
+        @media (max-width: 768px) {
+            .mobile-sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100vh;
+                background: rgba(13, 9, 38, 0.95);
+                backdrop-filter: blur(8px);
+                transition: left 0.3s ease;
+                z-index: 20;
+            }
+            
+            .mobile-sidebar.active {
+                left: 0;
+            }
+        }
+    </style>
+</head>
+<body class="text-gray-200">
+    <!-- Add the navigation bar -->
+    <nav class="border-b border-purple-500/10 backdrop-blur-xl fixed w-full z-10">
+        <div class="container mx-auto px-4 sm:px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent">
+                    SolForge
+                </div>
+                <button onclick="toggleDocsSidebar()" class="md:hidden text-purple-300">
+                    <i class="ph-list text-2xl"></i>
+                </button>
+                <div class="hidden md:flex items-center gap-4">
+                    <a href="/" class="text-purple-300 hover:text-purple-200 transition-colors">Launch</a>
+                    <a href="/guide" class="text-purple-300 hover:text-purple-200 transition-colors">Guide</a>
+                    <a href="/docs" class="text-purple-300 hover:text-purple-200 transition-colors">Docs</a>
+                    <div class="h-4 w-px bg-purple-500/20"></div>
+                    <span class="text-sm text-purple-300">Solana Network</span>
+                    <button onclick="connectWallet()" 
+                            id="walletButton"
+                            class="bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-6 py-2 rounded-xl transition-all duration-300 sol-glow flex items-center gap-2">
+                        <i class="ph-wallet"></i>
+                        <span>Connect Wallet</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex min-h-screen pt-16">
+        <!-- Enhanced sidebar with more sections -->
+        <aside class="w-64 border-r border-purple-500/10 fixed h-screen overflow-y-auto">
+            <div class="p-6 flex flex-col h-full">
+                <div class="space-y-8 overflow-y-auto flex-1" style="scrollbar-width: thin; scrollbar-color: rgba(153, 69, 255, 0.3) transparent;">
+                    <h3 class="text-sm font-semibold text-purple-300/60 uppercase tracking-wider mb-4">Getting Started</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#introduction" class="text-purple-300 hover:text-purple-200 transition-colors">Introduction</a></li>
+                        <li><a href="#quick-start" class="text-purple-300 hover:text-purple-200 transition-colors">Quick Start</a></li>
+                        <li><a href="#prerequisites" class="text-purple-300 hover:text-purple-200 transition-colors">Prerequisites</a></li>
+                        <li><a href="#installation" class="text-purple-300 hover:text-purple-200 transition-colors">Installation</a></li>
+                    </ul>
+
+                    <h3 class="text-sm font-semibold text-purple-300/60 uppercase tracking-wider mt-8 mb-4">Token Creation</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#token-standards" class="text-purple-300 hover:text-purple-200 transition-colors">Token Standards</a></li>
+                        <li><a href="#token-types" class="text-purple-300 hover:text-purple-200 transition-colors">Token Types</a></li>
+                        <li><a href="#tokenomics" class="text-purple-300 hover:text-purple-200 transition-colors">Tokenomics</a></li>
+                        <li><a href="#minting" class="text-purple-300 hover:text-purple-200 transition-colors">Minting Process</a></li>
+                    </ul>
+
+                    <h3 class="text-sm font-semibold text-purple-300/60 uppercase tracking-wider mt-8 mb-4">Advanced Features</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#custom-tokens" class="text-purple-300 hover:text-purple-200 transition-colors">Custom Tokens</a></li>
+                        <li><a href="#metadata" class="text-purple-300 hover:text-purple-200 transition-colors">Metadata</a></li>
+                        <li><a href="#integration" class="text-purple-300 hover:text-purple-200 transition-colors">Integration</a></li>
+                        <li><a href="#security" class="text-purple-300 hover:text-purple-200 transition-colors">Security</a></li>
+                    </ul>
+
+                    <h3 class="text-sm font-semibold text-purple-300/60 uppercase tracking-wider mt-8 mb-4">Technical Reference</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#api-reference" class="text-purple-300 hover:text-purple-200 transition-colors">API Reference</a></li>
+                        <li><a href="#error-codes" class="text-purple-300 hover:text-purple-200 transition-colors">Error Codes</a></li>
+                        <li><a href="#best-practices" class="text-purple-300 hover:text-purple-200 transition-colors">Best Practices</a></li>
+                    </ul>
+
+                    <h3 class="text-sm font-semibold text-purple-300/60 uppercase tracking-wider mt-8 mb-4">Guides</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#deployment" class="text-purple-300 hover:text-purple-200 transition-colors">Deployment</a></li>
+                        <li><a href="#testing" class="text-purple-300 hover:text-purple-200 transition-colors">Testing</a></li>
+                        <li><a href="#monitoring" class="text-purple-300 hover:text-purple-200 transition-colors">Monitoring</a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="ml-64 flex-1 p-8">
+            <div class="max-w-4xl mx-auto doc-content">
+                <h1 class="text-4xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-500 to-green-400 bg-clip-text text-transparent">
+                    SolForge Documentation
+                </h1>
+
+                <section id="introduction" class="mb-12">
+                    <div class="gradient-border rounded-3xl">
+                        <div class="bg-[#0d0926] rounded-3xl p-8">
+                            <h2>Introduction to SolForge</h2>
+                            <p>SolForge is a cutting-edge token creation platform built on the Solana blockchain. Our platform simplifies the token creation process while maintaining the robust security and performance that Solana is known for.</p>
+                            
+                            <h3>Why Choose SolForge?</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Speed & Efficiency</h4>
+                                    <p class="text-sm text-purple-300/60">Launch your token in minutes with transaction speeds of up to 65,000 TPS</p>
+                                </div>
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Cost-Effective</h4>
+                                    <p class="text-sm text-purple-300/60">Minimal deployment costs starting at just 1.6 SOL</p>
+                                </div>
+                            </div>
+
+                            <h3>System Architecture</h3>
+                            <pre><code>// SolForge System Overview
+├── Core Services
+│   ├── Token Creation Engine
+│   ├── Metadata Management
+│   └── Security Protocols
+├── Integration Layer
+│   ├── Wallet Connections
+│   ├── RPC Nodes
+│   └── External APIs
+└── User Interface
+    ├── Web Interface
+    └── API Endpoints</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="quick-start" class="mb-12">
+                    <div class="gradient-border rounded-3xl">
+                        <div class="bg-[#0d0926] rounded-3xl p-8">
+                            <h2>Quick Start Guide</h2>
+                            <p>Launch your token in 4 simple steps:</p>
+                            
+                            <div class="space-y-4 mb-6">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">1. Prepare Your Wallet</h4>
+                                    <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                        <li>Install Phantom Wallet</li>
+                                        <li>Fund with minimum 1.6 SOL</li>
+                                        <li>Connect to SolForge platform</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">2. Configure Token</h4>
+                                    <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                        <li>Set token name and symbol</li>
+                                        <li>Define total supply</li>
+                                        <li>Configure decimals (default: 9)</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">3. Add Metadata</h4>
+                                    <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                        <li>Upload token logo</li>
+                                        <li>Add description</li>
+                                        <li>Set social links</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">4. Deploy</h4>
+                                    <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                        <li>Review configuration</li>
+                                        <li>Confirm transaction</li>
+                                        <li>Receive token address</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <i class="ph-info text-purple-400"></i>
+                                    <span class="text-purple-200 font-medium">Quick Start Example</span>
+                                </div>
+                                <pre><code>// Basic token deployment
+const tokenConfig = {
+    name: "MyToken",
+    symbol: "MTK",
+    decimals: 9,
+    totalSupply: 1_000_000,
+    metadata: {
+        image: "https://...",
+        description: "My awesome token"
+    }
+};</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="prerequisites" class="mb-12">
+                    <div class="gradient-border rounded-3xl">
+                        <div class="bg-[#0d0926] rounded-3xl p-8">
+                            <h2>Prerequisites</h2>
+                            <p>Before creating your token, ensure you have the following:</p>
+
+                            <div class="space-y-4 mb-6">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Required Components</h4>
+                                    <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                        <li>Phantom Wallet (or compatible Solana wallet)</li>
+                                        <li>Minimum 1.6 SOL balance</li>
+                                        <li>Modern web browser (Chrome, Firefox, Brave)</li>
+                                        <li>Basic understanding of token economics</li>
+                                    </ul>
+                                </div>
+
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Optional Components</h4>
+                                    <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                        <li>Token logo (recommended: 200x200px PNG)</li>
+                                        <li>Social media links</li>
+                                        <li>Project website</li>
+                                        <li>Whitepaper or documentation</li>
+                                    </ul>
+                                </div>
+
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Network Requirements</h4>
+                                    <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                        <li>Stable internet connection</li>
+                                        <li>Access to Solana mainnet</li>
+                                        <li>Unrestricted wallet access</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Token Creation Section -->
+                <section id="token-standards" class="mb-12">
+                    <div class="gradient-border rounded-3xl">
+                        <div class="bg-[#0d0926] rounded-3xl p-8">
+                            <h2>Token Standards</h2>
+                            <p>SolForge implements the Solana SPL Token standard with additional features for enhanced functionality.</p>
+
+                            <h3>SPL Token Standard</h3>
+                            <pre><code>// Token Interface
+interface SPLToken {
+    name: string;
+    symbol: string;
+    decimals: number;
+    totalSupply: bigint;
+    mintAuthority: PublicKey;
+    freezeAuthority?: PublicKey;
+    metadata?: TokenMetadata;
+}</code></pre>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Core Features</h4>
+                                    <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                        <li>Mint/Burn capability</li>
+                                        <li>Transfer restrictions</li>
+                                        <li>Account management</li>
+                                        <li>Metadata support</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Extensions</h4>
+                                    <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                        <li>Transfer hooks</li>
+                                        <li>Vesting schedules</li>
+                                        <li>Governance features</li>
+                                        <li>Multi-sig support</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="token-types" class="mb-12">
+                    <div class="gradient-border rounded-3xl">
+                        <div class="bg-[#0d0926] rounded-3xl p-8">
+                            <h2>Token Types</h2>
+                            <p>SolForge supports various token types to suit different project needs:</p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Standard Tokens</h4>
+                                    <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                        <li>Basic SPL tokens</li>
+                                        <li>Fixed supply</li>
+                                        <li>Simple transfers</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Mintable Tokens</h4>
+                                    <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                        <li>Dynamic supply</li>
+                                        <li>Controlled minting</li>
+                                        <li>Burn capability</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Governance Tokens</h4>
+                                    <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                        <li>Voting rights</li>
+                                        <li>Proposal creation</li>
+                                        <li>DAO integration</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tokenomics" class="mb-12">
+                    <div class="gradient-border rounded-3xl">
+                        <div class="bg-[#0d0926] rounded-3xl p-8">
+                            <h2>Tokenomics</h2>
+                            <p>Design your token's economic model with these key parameters:</p>
+
+                            <div class="space-y-4 mt-6">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Supply Management</h4>
+                                    <pre><code>// Supply Configuration
+const supplyConfig = {
+    initialSupply: 1_000_000,
+    maxSupply: 10_000_000,
+    mintRate: "controlled",
+    burnMechanism: true
+};</code></pre>
+                                </div>
+
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Distribution Model</h4>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <p class="text-sm text-purple-300/60 mb-2">Initial Distribution</p>
+                                            <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                                <li>Team: 15%</li>
+                                                <li>Community: 40%</li>
+                                                <li>Development: 25%</li>
+                                                <li>Marketing: 20%</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm text-purple-300/60 mb-2">Vesting Schedule</p>
+                                            <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                                <li>Cliff: 6 months</li>
+                                                <li>Duration: 24 months</li>
+                                                <li>Release: Linear</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="minting" class="mb-12">
+                    <div class="gradient-border rounded-3xl">
+                        <div class="bg-[#0d0926] rounded-3xl p-8">
+                            <h2>Minting Process</h2>
+                            <p>Understand the token minting process and available options for supply management.</p>
+
+                            <div class="space-y-4 mt-6">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Minting Options</h4>
+                                    <pre><code>// Minting Configuration
+const mintConfig = {
+    type: "fixed" | "dynamic" | "capped",
+    initialMint: boolean,
+    mintAuthority: "single" | "multi-sig",
+    pausable: boolean
+};</code></pre>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                        <h4 class="font-medium text-purple-200 mb-2">Fixed Supply</h4>
+                                        <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                            <li>One-time minting</li>
+                                            <li>Immutable supply</li>
+                                            <li>No additional minting</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                        <h4 class="font-medium text-purple-200 mb-2">Dynamic Supply</h4>
+                                        <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                            <li>Flexible minting</li>
+                                            <li>Controlled by authority</li>
+                                            <li>Optional supply cap</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="custom-tokens" class="mb-12">
+                    <div class="gradient-border rounded-3xl">
+                        <div class="bg-[#0d0926] rounded-3xl p-8">
+                            <h2>Custom Tokens</h2>
+                            <p>Create specialized tokens with advanced features and custom functionality.</p>
+
+                            <div class="space-y-4 mt-6">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Custom Token Features</h4>
+                                    <pre><code>// Custom Token Configuration
+const customFeatures = {
+    transferRestrictions: {
+        whitelist: boolean,
+        blacklist: boolean,
+        timelock: number
+    },
+    voting: {
+        enabled: boolean,
+        weight: "equal" | "proportional",
+        delegation: boolean
+    },
+    staking: {
+        enabled: boolean,
+        rewards: "fixed" | "dynamic",
+        lockPeriod: number
+    }
+};</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="metadata" class="mb-12">
+                    <div class="gradient-border rounded-3xl">
+                        <div class="bg-[#0d0926] rounded-3xl p-8">
+                            <h2>Token Metadata</h2>
+                            <p>Enhance your token with rich metadata and additional information.</p>
+
+                            <div class="space-y-4 mt-6">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Metadata Structure</h4>
+                                    <pre><code>// Metadata Configuration
+const metadata = {
+    name: string,
+    symbol: string,
+    image: string,  // URI
+    description: string,
+    externalUrl: string,
+    attributes: [{
+        trait_type: string,
+        value: string
+    }],
+    properties: {
+        files: [{
+            uri: string,
+            type: string
+        }],
+        category: string
+    }
+};</code></pre>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                        <h4 class="font-medium text-purple-200 mb-2">Required Fields</h4>
+                                        <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                            <li>Name</li>
+                                            <li>Symbol</li>
+                                            <li>Description</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                        <h4 class="font-medium text-purple-200 mb-2">Optional Fields</h4>
+                                        <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                            <li>External URL</li>
+                                            <li>Attributes</li>
+                                            <li>Additional files</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="integration" class="mb-12">
+                    <div class="gradient-border rounded-3xl">
+                        <div class="bg-[#0d0926] rounded-3xl p-8">
+                            <h2>Integration</h2>
+                            <p>Learn how to integrate your token with various platforms and services.</p>
+
+                            <div class="space-y-4 mt-6">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Integration Methods</h4>
+                                    <pre><code>// Integration Example
+const integrationConfig = {
+    wallet: {
+        connect: async () => {
+            const provider = getProvider();
+            await provider.connect();
+        },
+        disconnect: () => provider.disconnect()
+    },
+    transaction: {
+        send: async (recipient, amount) => {
+            const tx = new Transaction();
+            tx.add(createTransferInstruction(
+                source,
+                destination,
+                owner,
+                amount
+            ));
+            return await sendAndConfirmTransaction(connection, tx, [payer]);
+        }
+    }
+};</code></pre>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                        <h4 class="font-medium text-purple-200 mb-2">Supported Platforms</h4>
+                                        <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                            <li>DEX Integration</li>
+                                            <li>Wallet Support</li>
+                                            <li>Block Explorers</li>
+                                            <li>NFT Marketplaces</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                        <h4 class="font-medium text-purple-200 mb-2">API Integration</h4>
+                                        <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                            <li>REST API</li>
+                                            <li>WebSocket Support</li>
+                                            <li>RPC Methods</li>
+                                            <li>SDK Integration</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="security" class="mb-12">
+                    <div class="gradient-border rounded-3xl">
+                        <div class="bg-[#0d0926] rounded-3xl p-8">
+                            <h2>Security</h2>
+                            <p>Implement robust security measures to protect your token and users.</p>
+
+                            <div class="space-y-4 mt-6">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Security Configuration</h4>
+                                    <pre><code>// Security Settings
+const securityConfig = {
+    multisig: {
+        threshold: 2,
+        owners: [PublicKey],
+        timelock: 24 // hours
+    },
+    rateLimit: {
+        enabled: true,
+        maxTransactions: 1000,
+        window: 3600 // seconds
+    },
+    monitoring: {
+        alerts: true,
+        logging: true,
+        anomalyDetection: true
+    }
+};</code></pre>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                        <h4 class="font-medium text-purple-200 mb-2">Access Control</h4>
+                                        <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                            <li>Multi-sig</li>
+                                            <li>Time locks</li>
+                                            <li>Role-based access</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                        <h4 class="font-medium text-purple-200 mb-2">Transaction Security</h4>
+                                        <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                            <li>Rate limiting</li>
+                                            <li>Amount caps</li>
+                                            <li>Blacklisting</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                        <h4 class="font-medium text-purple-200 mb-2">Monitoring</h4>
+                                        <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                            <li>Real-time alerts</li>
+                                            <li>Audit logging</li>
+                                            <li>Analytics</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="api-reference" class="mb-12">
+                    <div class="gradient-border rounded-3xl">
+                        <div class="bg-[#0d0926] rounded-3xl p-8">
+                            <h2>API Reference</h2>
+                            <p>Complete reference for the SolForge API endpoints and methods.</p>
+
+                            <div class="space-y-4 mt-6">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Token Creation</h4>
+                                    <pre><code>// Create Token
+POST /api/v1/tokens/create
+{
+    "name": string,
+    "symbol": string,
+    "decimals": number,
+    "supply": number,
+    "metadata": TokenMetadata
+}
+
+// Response
+{
+    "success": boolean,
+    "tokenAddress": string,
+    "txHash": string
+}</code></pre>
+                                </div>
+
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Token Management</h4>
+                                    <pre><code>// Mint Additional Tokens
+POST /api/v1/tokens/{address}/mint
+{
+    "amount": number,
+    "recipient": string
+}
+
+// Burn Tokens
+POST /api/v1/tokens/{address}/burn
+{
+    "amount": number
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="error-codes" class="mb-12">
+                    <div class="gradient-border rounded-3xl">
+                        <div class="bg-[#0d0926] rounded-3xl p-8">
+                            <h2>Error Codes</h2>
+                            <p>Common error codes and troubleshooting solutions.</p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Transaction Errors</h4>
+                                    <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                        <li>6001: Insufficient funds</li>
+                                        <li>6002: Invalid mint authority</li>
+                                        <li>6003: Supply cap exceeded</li>
+                                        <li>6004: Invalid metadata</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">API Errors</h4>
+                                    <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                        <li>4001: Invalid parameters</li>
+                                        <li>4002: Rate limit exceeded</li>
+                                        <li>4003: Unauthorized access</li>
+                                        <li>4004: Resource not found</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="best-practices" class="mb-12">
+                    <div class="gradient-border rounded-3xl">
+                        <div class="bg-[#0d0926] rounded-3xl p-8">
+                            <h2>Best Practices</h2>
+                            <p>Recommended practices for token creation and management.</p>
+
+                            <div class="space-y-4 mt-6">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Security Best Practices</h4>
+                                    <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                        <li>Use multi-signature for critical operations</li>
+                                        <li>Implement rate limiting</li>
+                                        <li>Regular security audits</li>
+                                        <li>Monitor transactions</li>
+                                    </ul>
+                                </div>
+
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Code Examples</h4>
+                                    <pre><code>// Best Practice Implementation
+const bestPractices = {
+    security: {
+        useMultiSig: true,
+        implementRateLimiting: true,
+        regularAudits: true
+    },
+    deployment: {
+        testnetFirst: true,
+        gradualRollout: true
+    },
+    monitoring: {
+        alerts: true,
+        logging: true
+    }
+};</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="deployment" class="mb-12">
+                    <div class="gradient-border rounded-3xl">
+                        <div class="bg-[#0d0926] rounded-3xl p-8">
+                            <h2>Deployment Guide</h2>
+                            <p>Step-by-step guide for deploying your token to the Solana network.</p>
+
+                            <div class="space-y-4 mt-6">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Deployment Steps</h4>
+                                    <pre><code>// Deployment Configuration
+const deploymentConfig = {
+    network: "devnet" | "testnet" | "mainnet-beta",
+    confirmation: "confirmed" | "finalized",
+    maxRetries: 3,
+    timeout: 30000 // ms
+};</code></pre>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                        <h4 class="font-medium text-purple-200 mb-2">Pre-deployment Checklist</h4>
+                                        <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                            <li>Token metadata complete</li>
+                                            <li>Supply configuration set</li>
+                                            <li>Security measures implemented</li>
+                                            <li>Test cases passed</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                        <h4 class="font-medium text-purple-200 mb-2">Post-deployment Tasks</h4>
+                                        <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                            <li>Verify contract</li>
+                                            <li>Monitor transactions</li>
+                                            <li>Update documentation</li>
+                                            <li>Community announcement</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="testing" class="mb-12">
+                    <div class="gradient-border rounded-3xl">
+                        <div class="bg-[#0d0926] rounded-3xl p-8">
+                            <h2>Testing Guide</h2>
+                            <p>Comprehensive testing procedures for your token implementation.</p>
+
+                            <div class="space-y-4 mt-6">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Test Suite Configuration</h4>
+                                    <pre><code>// Testing Framework Setup
+const testConfig = {
+    unit: {
+        framework: "jest",
+        coverage: true,
+        threshold: 85
+    },
+    integration: {
+        network: "devnet",
+        accounts: generateTestAccounts(5),
+        scenarios: ["mint", "transfer", "burn"]
+    }
+};</code></pre>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                        <h4 class="font-medium text-purple-200 mb-2">Unit Tests</h4>
+                                        <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                            <li>Token creation</li>
+                                            <li>Supply management</li>
+                                            <li>Access control</li>
+                                            <li>Error handling</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                        <h4 class="font-medium text-purple-200 mb-2">Integration Tests</h4>
+                                        <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                            <li>Network interactions</li>
+                                            <li>Transaction flow</li>
+                                            <li>State updates</li>
+                                            <li>Event emissions</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                        <h4 class="font-medium text-purple-200 mb-2">Security Tests</h4>
+                                        <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                            <li>Access control</li>
+                                            <li>Rate limiting</li>
+                                            <li>Input validation</li>
+                                            <li>Edge cases</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="monitoring" class="mb-12">
+                    <div class="gradient-border rounded-3xl">
+                        <div class="bg-[#0d0926] rounded-3xl p-8">
+                            <h2>Monitoring Guide</h2>
+                            <p>Set up comprehensive monitoring for your token's performance and security.</p>
+
+                            <div class="space-y-4 mt-6">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Monitoring Configuration</h4>
+                                    <pre><code>// Monitoring Setup
+const monitoringConfig = {
+    metrics: {
+        transactions: true,
+        holders: true,
+        volume: true,
+        price: true
+    },
+    alerts: {
+        largeTransfers: true,
+        unusualActivity: true,
+        errorSpikes: true,
+        threshold: {
+            amount: 10000,
+            timeWindow: 3600
+        }
+    },
+    reporting: {
+        interval: "hourly",
+        retention: 90, // days
+        exportFormat: "csv"
+    }
+};</code></pre>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                        <h4 class="font-medium text-purple-200 mb-2">Key Metrics</h4>
+                                        <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                            <li>Transaction volume</li>
+                                            <li>Holder distribution</li>
+                                            <li>Gas usage</li>
+                                            <li>Error rates</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                        <h4 class="font-medium text-purple-200 mb-2">Alert Types</h4>
+                                        <ul class="list-disc list-inside text-sm text-purple-300/60">
+                                            <li>Security incidents</li>
+                                            <li>Performance issues</li>
+                                            <li>Network problems</li>
+                                            <li>Contract events</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="container mx-auto px-6 py-8 border-t border-purple-500/10 mt-20">
+        <div class="text-center text-purple-300/60">
+            © 2024 SolForge. Powered by Solana.
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        function toggleDocsSidebar() {
+            const sidebar = document.querySelector('.mobile-sidebar');
+            sidebar.classList.toggle('active');
+            document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+        }
+
+        // Close sidebar when clicking a link
+        document.querySelectorAll('.mobile-sidebar a').forEach(link => {
+            link.addEventListener('click', () => {
+                const sidebar = document.querySelector('.mobile-sidebar');
+                sidebar.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        });
+    </script>
+</body>
+</html>

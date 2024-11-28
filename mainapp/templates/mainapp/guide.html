@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SolForge | Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/phosphor-icons"></script>
+    <style>
+        /* Include the same styles as index.html */
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(125deg, #000000, #13073A, #1A0B3E);
+            min-height: 100vh;
+        }
+        .sol-glow { box-shadow: 0 0 25px rgba(153, 69, 255, 0.3); }
+        .gradient-border {
+            background: linear-gradient(180deg, rgba(153, 69, 255, 0.3), rgba(20, 241, 149, 0.3));
+            padding: 1px;
+        }
+    </style>
+</head>
+<body class="text-gray-200">
+    <!-- Same Navigation as index.html -->
+    <nav class="border-b border-purple-500/10 backdrop-blur-xl fixed w-full z-10">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="text-2xl font-bold bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent">
+                    SolForge
+                </div>
+                <div class="flex items-center gap-6">
+                    <a href="/" class="text-purple-300 hover:text-purple-200 transition-colors">Launch</a>
+                    <a href="/guide" class="text-purple-300 hover:text-purple-200 transition-colors">Guide</a>
+                    <a href="/docs" class="text-purple-300 hover:text-purple-200 transition-colors">Docs</a>
+                    <div class="h-4 w-px bg-purple-500/20"></div>
+                    <span class="text-sm text-purple-300">Solana Network</span>
+                    <button onclick="connectWallet()" 
+                            id="walletButton"
+                            class="bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-6 py-2 rounded-xl transition-all duration-300 sol-glow flex items-center gap-2">
+                        <i class="ph-wallet"></i>
+                        <span>Connect Wallet</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 pt-32">
+        <div class="text-center mb-16">
+            <h1 class="text-6xl font-bold mb-6 bg-gradient-to-r from-purple-400 via-pink-500 to-green-400 bg-clip-text text-transparent">
+                Launch Guide
+            </h1>
+            <p class="text-purple-300/60 max-w-2xl mx-auto">
+                Everything you need to know about launching your token on Solana
+            </p>
+        </div>
+
+        <!-- Guide Content -->
+        <div class="max-w-4xl mx-auto space-y-8">
+            <!-- Step 1 -->
+            <div class="gradient-border rounded-3xl">
+                <div class="bg-[#0d0926] rounded-3xl p-8">
+                    <div class="flex items-start gap-6">
+                        <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                            <span class="text-2xl font-bold text-purple-400">1</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-purple-200 mb-4">Connect Your Wallet</h3>
+                            <p class="text-purple-300/60 mb-4">
+                                Start by connecting your Phantom wallet to SolForge. Make sure you have enough SOL to cover the deployment costs and network fees.
+                            </p>
+                            <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                <div class="flex items-center gap-2">
+                                    <i class="ph-info text-purple-400"></i>
+                                    <span class="text-sm text-purple-300">Required Balance: 1.6 SOL</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="gradient-border rounded-3xl">
+                <div class="bg-[#0d0926] rounded-3xl p-8">
+                    <div class="flex items-start gap-6">
+                        <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                            <span class="text-2xl font-bold text-purple-400">2</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-purple-200 mb-4">Configure Your Token</h3>
+                            <p class="text-purple-300/60 mb-4">
+                                Set up your token's basic information and parameters. Choose a unique name and symbol that represents your project.
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Token Name</h4>
+                                    <p class="text-sm text-purple-300/60">Choose a memorable, unique name that reflects your project's identity</p>
+                                </div>
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <h4 class="font-medium text-purple-200 mb-2">Token Symbol</h4>
+                                    <p class="text-sm text-purple-300/60">3-10 characters, uppercase letters only (e.g., SOL, BTC)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="gradient-border rounded-3xl">
+                <div class="bg-[#0d0926] rounded-3xl p-8">
+                    <div class="flex items-start gap-6">
+                        <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                            <span class="text-2xl font-bold text-purple-400">3</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-purple-200 mb-4">Token Economics</h3>
+                            <p class="text-purple-300/60 mb-4">
+                                Define your token's supply and decimal places. These parameters cannot be changed after deployment.
+                            </p>
+                            <div class="space-y-4">
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <i class="ph-info text-purple-400"></i>
+                                        <h4 class="font-medium text-purple-200">Total Supply</h4>
+                                    </div>
+                                    <p class="text-sm text-purple-300/60">Maximum number of tokens that will ever exist</p>
+                                </div>
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <i class="ph-calculator text-purple-400"></i>
+                                        <h4 class="font-medium text-purple-200">Decimals</h4>
+                                    </div>
+                                    <p class="text-sm text-purple-300/60">Number of decimal places for token division (usually 9)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Resources -->
+            <div class="gradient-border rounded-3xl mt-12">
+                <div class="bg-[#0d0926] rounded-3xl p-8">
+                    <h3 class="text-xl font-semibold text-purple-200 mb-6">Additional Resources</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <a href="/docs" class="block group">
+                            <div class="bg-purple-900/20 rounded-xl p-6 border border-purple-500/20 hover:bg-purple-900/30 transition-all">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <i class="ph-book-open text-2xl text-purple-400"></i>
+                                    <h4 class="font-medium text-purple-200">Documentation</h4>
+                                </div>
+                                <p class="text-sm text-purple-300/60">Detailed technical documentation about token creation</p>
+                            </div>
+                        </a>
+                        <a href="#" class="block group">
+                            <div class="bg-purple-900/20 rounded-xl p-6 border border-purple-500/20 hover:bg-purple-900/30 transition-all">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <i class="ph-youtube-logo text-2xl text-purple-400"></i>
+                                    <h4 class="font-medium text-purple-200">Video Tutorials</h4>
+                                </div>
+                                <p class="text-sm text-purple-300/60">Step-by-step video guides for token deployment</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="container mx-auto px-6 py-8 border-t border-purple-500/10 mt-20">
+        <div class="text-center text-purple-300/60">
+            © 2024 SolForge. Powered by Solana.
+        </div>
+    </footer>
+
+    <!-- Include the same wallet connection script as index.html -->
+    <script>
+        // ... wallet connection code ...
+    </script>
+</body>
+</html>
