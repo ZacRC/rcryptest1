@@ -14,6 +14,7 @@ WORKDIR /code
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Upgrade pip
@@ -28,8 +29,8 @@ RUN pip install -r requirements.txt
 # Copy the entire project into the container
 COPY . /code/
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
+# Create directory for static files
+RUN mkdir -p /code/staticfiles
 
 # Expose port 8000 to the host
 EXPOSE 8000
