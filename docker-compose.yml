@@ -4,9 +4,13 @@ services:
   web:
     build: .
     command: >
-      sh -c "python manage.py migrate &&
-             python manage.py collectstatic --noinput &&
-             gunicorn myproject.wsgi:application --bind 0.0.0.0:8000"
+      sh -c "
+        echo 'Waiting for 10 seconds before starting...' &&
+        sleep 10 &&
+        python manage.py migrate &&
+        python manage.py collectstatic --noinput &&
+        gunicorn myproject.wsgi:application --bind 0.0.0.0:8000
+      "
     volumes:
       - .:/code
       - static_volume:/code/staticfiles
@@ -19,6 +23,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    restart: unless-stopped
 
 volumes:
   static_volume:

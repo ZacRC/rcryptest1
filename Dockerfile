@@ -30,7 +30,8 @@ RUN pip install -r requirements.txt
 COPY . /code/
 
 # Create directory for static files
-RUN mkdir -p /code/staticfiles
+RUN mkdir -p /code/staticfiles && \
+    chmod -R 755 /code/staticfiles
 
 # Expose port 8000 to the host
 EXPOSE 8000
