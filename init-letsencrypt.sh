@@ -5,52 +5,39 @@ rsa_key_size=4096
 data_path="./certbot"
 email="zacharyrcherny@gmail.com"
 
-# Stop existing containers and clean up
-docker compose down
+# Stop and remove everything
+docker compose down -v
 rm -rf "$data_path"
 
-# Create required directories
+# Create directories
 mkdir -p "$data_path/conf/live/solforge.live"
 mkdir -p "$data_path/www"
 
-# Download TLS parameters
-echo "### Downloading recommended TLS parameters ..."
-curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf > "$data_path/conf/options-ssl-nginx.conf"
-curl -s https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem > "$data_path/conf/ssl-dhparams.pem"
+# Start nginx without SSL
+docker compose up -d nginx
 
-# Start services
-echo "### Starting services ..."
-docker compose up -d
+# Wait for nginx
+echo "### Waiting for nginx to start..."
+sleep 10
 
-# Wait for services to start
-echo "### Waiting for services to start ..."
-sleep 30
-
-# Request certificate
-echo "### Requesting Let's Encrypt certificate ..."
+# Request staging certificate
+echo "### Requesting staging certificate..."
 docker compose run --rm --entrypoint "\
-    certbot certonly --webroot -w /var/www/certbot \
-    --email $email \
-    --rsa-key-size $rsa_key_size \
-    --agree-tos \
-    --force-renewal \
-    --non-interactive \
-    -d solforge.live -d www.solforge.live \
-    --staging" certbot
+  certbot certonly --webroot -w /var/www/certbot \
+  --staging \
+  --email $email \
+  --agree-tos \
+  --no-eff-email \
+  -d solforge.live -d www.solforge.live" certbot
 
-# If staging was successful, get real certificate
-if [ $? -eq 0 ]; then
-    echo "### Staging successful, getting real certificate ..."
-    docker compose run --rm --entrypoint "\
-        certbot certonly --webroot -w /var/www/certbot \
-        --email $email \
-        --rsa-key-size $rsa_key_size \
-        --agree-tos \
-        --force-renewal \
-        --non-interactive \
-        -d solforge.live -d www.solforge.live" certbot
-fi
+# Request real certificate
+echo "### Requesting production certificate..."
+docker compose run --rm --entrypoint "\
+  certbot certonly --webroot -w /var/www/certbot \
+  --email $email \
+  --agree-tos \
+  --no-eff-email \
+  -d solforge.live -d www.solforge.live" certbot
 
-# Reload nginx
-echo "### Reloading nginx ..."
-docker compose exec nginx nginx -s reload
+# Restart nginx
+docker compose restart nginx
