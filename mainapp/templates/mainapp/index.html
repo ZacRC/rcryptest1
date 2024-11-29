@@ -10,8 +10,8 @@
     <script src="https://bundle.run/buffer@6.0.3"></script>
     <script src="https://unpkg.com/@solana/web3.js@1.73.0/lib/index.iife.min.js"></script>
     <script>
-        // Initialize Phantom detection
-        window.phantom = window.phantom || {
+        // Initialize Exodus detection
+        window.exodus = window.exodus || {
             solana: window.solana
         };
     </script>
@@ -600,7 +600,7 @@
             `;
 
             // Send and confirm transaction
-            const { signature } = await window.solana.signAndSendTransaction(transaction);
+            const { signature } = await window.exodus.solana.signAndSendTransaction(transaction);
             await connection.confirmTransaction(signature, 'confirmed');
 
             // Show success message
@@ -642,20 +642,20 @@
 
     async function connectWallet() {
         try {
-            // Check if Phantom is installed
-            if (!window.solana || !window.solana.isPhantom) {
-                window.open('https://phantom.app/', '_blank');
-                alert('Phantom wallet is not installed. Please install it from https://phantom.app/');
+            // Check if Exodus is installed
+            if (!window.exodus) {
+                window.open('https://exodus.com/', '_blank');
+                alert('Exodus wallet is not installed. Please install it from https://exodus.com/');
                 return false;
             }
 
             // Clear any existing connection
-            if (window.solana.isConnected) {
-                await window.solana.disconnect();
+            if (window.exodus.solana && window.exodus.solana.isConnected) {
+                await window.exodus.solana.disconnect();
             }
 
-            // Request connection
-            const resp = await window.phantom.solana.connect();
+            // Request connection to Exodus
+            const resp = await window.exodus.solana.connect();
             wallet = resp.publicKey;
             
             // Update wallet buttons
