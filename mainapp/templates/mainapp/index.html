@@ -55,6 +55,38 @@
                 padding-bottom: 1rem;
             }
         }
+        @media (max-width: 640px) {
+            .container {
+                width: 100%;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            #mobileMenu {
+                top: 72px;
+                z-index: 50;
+            }
+            
+            .verify-step-container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            .steps-container {
+                padding-bottom: 1rem;
+                margin-bottom: 2rem;
+            }
+        }
+        .mobile-menu-transition {
+            transition: all 0.3s ease-in-out;
+        }
+        .input-field {
+            width: 100%;
+            max-width: 100%;
+        }
+        button {
+            min-height: 44px;
+        }
     </style>
 </head>
 <body class="text-gray-200">
@@ -65,19 +97,12 @@
                 <div class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent">
                     SolForge
                 </div>
-                <!-- Mobile menu button -->
-                <div class="sm:hidden">
-                    <button onclick="toggleMobileMenu()" class="text-purple-300 hover:text-purple-200 text-2xl">
-                        <i class="ph-list"></i>
-                    </button>
-                </div>
                 <!-- Desktop menu -->
                 <div class="hidden sm:flex items-center gap-4 md:gap-6">
                     <a href="/" class="text-purple-300 hover:text-purple-200 transition-colors">Launch</a>
                     <a href="/guide" class="text-purple-300 hover:text-purple-200 transition-colors">Guide</a>
                     <a href="/docs" class="text-purple-300 hover:text-purple-200 transition-colors">Docs</a>
                     <div class="h-4 w-px bg-purple-500/20"></div>
-                    <span class="text-sm text-purple-300">Solana Network</span>
                     <button onclick="connectWallet()" 
                             id="walletButton"
                             class="bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-4 sm:px-6 py-2 rounded-xl transition-all duration-300 sol-glow flex items-center gap-2">
@@ -85,21 +110,29 @@
                         <span>Connect Wallet</span>
                     </button>
                 </div>
+                <!-- Mobile menu button -->
+                <div class="sm:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-purple-300 hover:text-purple-200 text-2xl">
+                        <i class="ph-list"></i>
+                    </button>
+                </div>
             </div>
         </div>
-        <!-- Mobile menu -->
-        <div id="mobileMenu" class="hidden sm:hidden fixed top-[72px] left-0 right-0 bg-[#0d0926]/95 backdrop-blur-xl border-b border-purple-500/10">
-            <div class="px-4 py-4 space-y-4">
-                <a href="/" class="block text-purple-300 hover:text-purple-200 py-2">Launch</a>
-                <a href="/guide" class="block text-purple-300 hover:text-purple-200 py-2">Guide</a>
-                <a href="/docs" class="block text-purple-300 hover:text-purple-200 py-2">Docs</a>
-                <div class="h-px bg-purple-500/20"></div>
-                <button onclick="connectWallet()" 
-                        id="mobileWalletButton"
-                        class="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-4 py-3 rounded-xl transition-all duration-300 sol-glow flex items-center justify-center gap-2">
-                    <i class="ph-wallet"></i>
-                    <span>Connect Wallet</span>
-                </button>
+        <!-- Mobile menu dropdown -->
+        <div id="mobileMenu" class="hidden sm:hidden fixed w-full bg-[#0d0926]/95 backdrop-blur-xl border-b border-purple-500/10">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex flex-col space-y-4">
+                    <a href="/" class="text-purple-300 hover:text-purple-200 py-2">Launch</a>
+                    <a href="/guide" class="text-purple-300 hover:text-purple-200 py-2">Guide</a>
+                    <a href="/docs" class="text-purple-300 hover:text-purple-200 py-2">Docs</a>
+                    <div class="h-px bg-purple-500/20 my-2"></div>
+                    <button onclick="connectWallet()" 
+                            id="mobileWalletButton"
+                            class="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-4 py-3 rounded-xl transition-all duration-300 sol-glow flex items-center justify-center gap-2">
+                        <i class="ph-wallet"></i>
+                        <span>Connect Wallet</span>
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
@@ -498,16 +531,35 @@
         const configureStep = document.querySelector('form').parentElement.parentElement;
         const verifyStep = document.getElementById('verifyStep');
         
-        // Get form values and validate
+        // Get all form values
         const tokenName = document.querySelector('input[placeholder="e.g., Solana Moon"]').value;
         const tokenSymbol = document.querySelector('input[placeholder="e.g., MOON"]').value;
         const tokenSupply = document.querySelector('input[placeholder="1000000000"]').value;
         const tokenDecimals = document.querySelector('select').value;
+        const logoInput = document.getElementById('logoInput');
         
         // Basic validation
         if (!tokenName || !tokenSymbol || !tokenSupply) {
             alert('Please fill in all required fields');
             return;
+        }
+        
+        // Update verification preview
+        document.getElementById('tokenNamePreview').textContent = tokenName;
+        document.getElementById('tokenSymbolPreview').textContent = tokenSymbol;
+        document.getElementById('tokenSupplyPreview').textContent = new Intl.NumberFormat().format(tokenSupply);
+        document.getElementById('tokenDecimalsPreview').textContent = tokenDecimals;
+        
+        // Transfer logo if uploaded
+        const tokenLogoPreview = document.getElementById('tokenLogoPreview');
+        const originalImagePreview = document.getElementById('imagePreview');
+        if (originalImagePreview && !originalImagePreview.classList.contains('hidden')) {
+            const originalImg = originalImagePreview.querySelector('img');
+            tokenLogoPreview.innerHTML = `<img src="${originalImg.src}" class="w-full h-full object-cover rounded-xl">`;
+        } else {
+            tokenLogoPreview.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-purple-900/40">
+                <i class="ph-image text-3xl text-purple-400"></i>
+            </div>`;
         }
         
         // Switch to verification step
@@ -743,17 +795,16 @@
                 uploadIcon.classList.add('hidden');
                 imagePreview.classList.remove('hidden');
                 
-                // Add remove button
-                const removeButton = document.createElement('button');
-                removeButton.className = 'absolute top-2 right-2 bg-red-500/80 hover:bg-red-600 rounded-full p-1 transition-all';
-                removeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>';
-                removeButton.onclick = function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    resetUpload();
-                };
-                
-                if (!container.querySelector('button')) {
+                // Add remove button if it doesn't exist
+                if (!container.querySelector('.remove-button')) {
+                    const removeButton = document.createElement('button');
+                    removeButton.className = 'remove-button absolute top-2 right-2 bg-red-500/80 hover:bg-red-600 rounded-full p-1 transition-all';
+                    removeButton.innerHTML = '<i class="ph-x text-white"></i>';
+                    removeButton.onclick = function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        resetUpload();
+                    };
                     container.appendChild(removeButton);
                 }
             };
@@ -766,18 +817,13 @@
         const imagePreview = document.getElementById('imagePreview');
         const container = document.getElementById('imagePreviewContainer');
         const input = document.getElementById('logoInput');
-        const removeButton = container.querySelector('button');
+        const removeButton = container.querySelector('.remove-button');
 
-        // Reset the file input
         input.value = '';
-        
-        // Show upload icon and hide preview
         uploadIcon.classList.remove('hidden');
         imagePreview.classList.add('hidden');
-        
-        // Remove the remove button if it exists
         if (removeButton) {
-            container.removeChild(removeButton);
+            removeButton.remove();
         }
     }
 
@@ -872,13 +918,17 @@
     <script>
     function toggleMobileMenu() {
         const mobileMenu = document.getElementById('mobileMenu');
-        if (mobileMenu.classList.contains('hidden')) {
+        const isHidden = mobileMenu.classList.contains('hidden');
+        
+        if (isHidden) {
             mobileMenu.classList.remove('hidden');
-            // Add slide down animation
-            mobileMenu.style.animation = 'slideDown 0.3s ease-out forwards';
+            requestAnimationFrame(() => {
+                mobileMenu.style.opacity = '1';
+                mobileMenu.style.transform = 'translateY(0)';
+            });
         } else {
-            // Add slide up animation
-            mobileMenu.style.animation = 'slideUp 0.3s ease-out forwards';
+            mobileMenu.style.opacity = '0';
+            mobileMenu.style.transform = 'translateY(-1rem)';
             setTimeout(() => {
                 mobileMenu.classList.add('hidden');
             }, 300);
