@@ -36,6 +36,25 @@
             border-color: rgba(153, 69, 255, 0.5);
             box-shadow: 0 0 15px rgba(153, 69, 255, 0.2);
         }
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(-100%); opacity: 0; }
+        }
+        @media (max-width: 640px) {
+            .step-indicator {
+                flex-shrink: 0;
+            }
+            
+            .steps-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 1rem;
+            }
+        }
     </style>
 </head>
 <body class="text-gray-200">
@@ -48,7 +67,7 @@
                 </div>
                 <!-- Mobile menu button -->
                 <div class="sm:hidden">
-                    <button onclick="toggleMobileMenu()" class="text-purple-300 hover:text-purple-200">
+                    <button onclick="toggleMobileMenu()" class="text-purple-300 hover:text-purple-200 text-2xl">
                         <i class="ph-list"></i>
                     </button>
                 </div>
@@ -69,15 +88,15 @@
             </div>
         </div>
         <!-- Mobile menu -->
-        <div id="mobileMenu" class="hidden sm:hidden border-t border-purple-500/10">
+        <div id="mobileMenu" class="hidden sm:hidden fixed top-[72px] left-0 right-0 bg-[#0d0926]/95 backdrop-blur-xl border-b border-purple-500/10">
             <div class="px-4 py-4 space-y-4">
-                <a href="/" class="block text-purple-300 hover:text-purple-200">Launch</a>
-                <a href="/guide" class="block text-purple-300 hover:text-purple-200">Guide</a>
-                <a href="/docs" class="block text-purple-300 hover:text-purple-200">Docs</a>
+                <a href="/" class="block text-purple-300 hover:text-purple-200 py-2">Launch</a>
+                <a href="/guide" class="block text-purple-300 hover:text-purple-200 py-2">Guide</a>
+                <a href="/docs" class="block text-purple-300 hover:text-purple-200 py-2">Docs</a>
                 <div class="h-px bg-purple-500/20"></div>
                 <button onclick="connectWallet()" 
                         id="mobileWalletButton"
-                        class="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-4 py-2 rounded-xl transition-all duration-300 sol-glow flex items-center justify-center gap-2">
+                        class="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-4 py-3 rounded-xl transition-all duration-300 sol-glow flex items-center justify-center gap-2">
                     <i class="ph-wallet"></i>
                     <span>Connect Wallet</span>
                 </button>
@@ -86,13 +105,13 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 sm:px-6 pt-24 sm:pt-32">
+    <main class="container mx-auto px-4 sm:px-6 pt-20 sm:pt-32 pb-20">
         <!-- Header section with steps indicator -->
         <div class="text-center mb-8 sm:mb-16">
             <h1 class="text-4xl sm:text-6xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-purple-400 via-pink-500 to-green-400 bg-clip-text text-transparent">
                 Solforge.live
             </h1>
-            <div class="flex justify-start sm:justify-center items-center gap-4 mt-6 sm:mt-8 overflow-x-auto pb-4 sm:pb-0">
+            <div class="steps-container flex justify-start sm:justify-center items-center gap-4 mt-6 sm:mt-8 overflow-x-auto pb-4 sm:pb-0">
                 <div class="flex items-center step-indicator">
                     <div class="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center sol-glow">
                         <span class="text-white font-bold">1</span>
@@ -348,7 +367,7 @@
     </footer>
 
     <!-- Verification Step (initially hidden) -->
-    <div id="verifyStep" class="hidden max-w-4xl mx-auto">
+    <div id="verifyStep" class="hidden mx-auto px-4 sm:px-6 max-w-4xl">
         <div class="gradient-border rounded-3xl">
             <div class="bg-[#0d0926] rounded-3xl p-8">
                 <!-- Header -->
@@ -476,21 +495,30 @@
 
     // Function to show verification step
     function showVerification() {
-        // Get form values
+        const configureStep = document.querySelector('form').parentElement.parentElement;
+        const verifyStep = document.getElementById('verifyStep');
+        
+        // Get form values and validate
         const tokenName = document.querySelector('input[placeholder="e.g., Solana Moon"]').value;
         const tokenSymbol = document.querySelector('input[placeholder="e.g., MOON"]').value;
         const tokenSupply = document.querySelector('input[placeholder="1000000000"]').value;
         const tokenDecimals = document.querySelector('select').value;
-       
-        // Populate verification step with form data
-        // Additional code omitted for brevity
-
+        
+        // Basic validation
+        if (!tokenName || !tokenSymbol || !tokenSupply) {
+            alert('Please fill in all required fields');
+            return;
+        }
+        
         // Switch to verification step
         configureStep.classList.add('hidden');
         verifyStep.classList.remove('hidden');
-
+        
         // Update progress indicator
         updateProgress(2);
+        
+        // Scroll to top smoothly
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // Function to edit details and go back to configuration step
@@ -844,7 +872,35 @@
     <script>
     function toggleMobileMenu() {
         const mobileMenu = document.getElementById('mobileMenu');
-        mobileMenu.classList.toggle('hidden');
+        if (mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.remove('hidden');
+            // Add slide down animation
+            mobileMenu.style.animation = 'slideDown 0.3s ease-out forwards';
+        } else {
+            // Add slide up animation
+            mobileMenu.style.animation = 'slideUp 0.3s ease-out forwards';
+            setTimeout(() => {
+                mobileMenu.classList.add('hidden');
+            }, 300);
+        }
+    }
+    </script>
+
+    <script>
+    // Update the goBack function
+    function goBack() {
+        const configureStep = document.querySelector('form').parentElement.parentElement;
+        const verifyStep = document.getElementById('verifyStep');
+        
+        // Hide verify step and show configure step
+        verifyStep.classList.add('hidden');
+        configureStep.classList.remove('hidden');
+        
+        // Update progress indicator
+        updateProgress(1);
+        
+        // Scroll to top smoothly
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     </script>
 </body>
