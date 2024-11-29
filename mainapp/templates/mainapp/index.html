@@ -87,48 +87,140 @@
         button {
             min-height: 44px;
         }
+        :root {
+            --nav-height: 72px;
+        }
+
+        /* Navigation Styles */
+        .nav-link {
+            @apply text-purple-300 hover:text-purple-200 transition-colors;
+        }
+
+        .mobile-nav-link {
+            @apply text-purple-300 hover:text-purple-200 py-3 block transition-colors;
+        }
+
+        .wallet-button {
+            @apply bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 
+                   px-4 py-2 rounded-xl transition-all duration-300 sol-glow 
+                   flex items-center gap-2;
+        }
+
+        .mobile-wallet-button {
+            @apply w-full bg-gradient-to-r from-purple-600 to-purple-800 
+                   hover:from-purple-700 hover:to-purple-900 px-4 py-3 
+                   rounded-xl transition-all duration-300 sol-glow 
+                   flex items-center justify-center gap-2;
+        }
+
+        /* Main Content Spacing */
+        main {
+            padding-top: var(--nav-height);
+            min-height: calc(100vh - var(--nav-height));
+        }
+
+        /* Verification Step Positioning */
+        #verifyStep {
+            margin-top: var(--nav-height);
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .container {
+                @apply px-4;
+            }
+
+            #mobileMenu {
+                transform: translateY(-100%);
+                transition: transform 0.3s ease-in-out;
+            }
+
+            #mobileMenu.active {
+                transform: translateY(0);
+            }
+
+            .steps-container {
+                @apply overflow-x-auto pb-4;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .step-indicator {
+                @apply flex-shrink-0;
+            }
+        }
+
+        /* Form Improvements */
+        .input-field {
+            @apply w-full bg-purple-900/20 border border-purple-500/20 
+                   rounded-xl px-4 py-3 text-purple-200 
+                   focus:outline-none focus:border-purple-500/50 
+                   focus:ring-2 focus:ring-purple-500/20;
+        }
+
+        /* Image Upload Improvements */
+        #imagePreviewContainer {
+            @apply relative overflow-hidden transition-all duration-300;
+        }
+
+        #imagePreviewContainer:hover {
+            @apply border-purple-500/50;
+        }
+
+        .remove-button {
+            @apply absolute top-2 right-2 bg-red-500/80 hover:bg-red-600 
+                   rounded-full p-1 transition-all z-10;
+        }
+
+        /* Verification Step Alignment */
+        .verify-step-container {
+            @apply max-w-4xl mx-auto;
+        }
     </style>
 </head>
 <body class="text-gray-200">
-    <!-- Navigation -->
-    <nav class="border-b border-purple-500/10 backdrop-blur-xl fixed w-full z-10">
-        <div class="container mx-auto px-4 sm:px-6 py-4">
-            <div class="flex justify-between items-center">
-                <div class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent">
+    <!-- Updated Navigation -->
+    <nav class="fixed top-0 left-0 right-0 border-b border-purple-500/10 backdrop-blur-xl z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="text-xl font-bold bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent">
                     SolForge
                 </div>
-                <!-- Desktop menu -->
-                <div class="hidden sm:flex items-center gap-4 md:gap-6">
-                    <a href="/" class="text-purple-300 hover:text-purple-200 transition-colors">Launch</a>
-                    <a href="/guide" class="text-purple-300 hover:text-purple-200 transition-colors">Guide</a>
-                    <a href="/docs" class="text-purple-300 hover:text-purple-200 transition-colors">Docs</a>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="/" class="nav-link">Launch</a>
+                    <a href="/guide" class="nav-link">Guide</a>
+                    <a href="/docs" class="nav-link">Docs</a>
                     <div class="h-4 w-px bg-purple-500/20"></div>
                     <button onclick="connectWallet()" 
                             id="walletButton"
-                            class="bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-4 sm:px-6 py-2 rounded-xl transition-all duration-300 sol-glow flex items-center gap-2">
+                            class="wallet-button">
                         <i class="ph-wallet"></i>
                         <span>Connect Wallet</span>
                     </button>
                 </div>
-                <!-- Mobile menu button -->
-                <div class="sm:hidden">
-                    <button onclick="toggleMobileMenu()" class="text-purple-300 hover:text-purple-200 text-2xl">
-                        <i class="ph-list"></i>
-                    </button>
-                </div>
+
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" 
+                        class="md:hidden text-purple-300 hover:text-purple-200">
+                    <i class="ph-list text-2xl"></i>
+                </button>
             </div>
         </div>
-        <!-- Mobile menu dropdown -->
-        <div id="mobileMenu" class="hidden sm:hidden fixed w-full bg-[#0d0926]/95 backdrop-blur-xl border-b border-purple-500/10">
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" 
+             class="hidden md:hidden absolute top-full left-0 right-0 bg-[#0d0926]/95 backdrop-blur-xl border-b border-purple-500/10">
             <div class="container mx-auto px-4 py-4">
                 <div class="flex flex-col space-y-4">
-                    <a href="/" class="text-purple-300 hover:text-purple-200 py-2">Launch</a>
-                    <a href="/guide" class="text-purple-300 hover:text-purple-200 py-2">Guide</a>
-                    <a href="/docs" class="text-purple-300 hover:text-purple-200 py-2">Docs</a>
-                    <div class="h-px bg-purple-500/20 my-2"></div>
+                    <a href="/" class="mobile-nav-link">Launch</a>
+                    <a href="/guide" class="mobile-nav-link">Guide</a>
+                    <a href="/docs" class="mobile-nav-link">Docs</a>
+                    <div class="h-px bg-purple-500/20"></div>
                     <button onclick="connectWallet()" 
                             id="mobileWalletButton"
-                            class="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-4 py-3 rounded-xl transition-all duration-300 sol-glow flex items-center justify-center gap-2">
+                            class="mobile-wallet-button">
                         <i class="ph-wallet"></i>
                         <span>Connect Wallet</span>
                     </button>
@@ -190,15 +282,15 @@
                             <div class="w-full sm:w-1/3">
                                 <label class="block text-sm font-medium mb-4 text-purple-200">Token Logo*</label>
                                 <div class="relative group">
-                                    <div id="imagePreviewContainer" class="w-32 h-32 rounded-2xl border-2 border-dashed border-purple-500/30 flex flex-col items-center justify-center bg-purple-900/20 hover:bg-purple-900/30 transition-all cursor-pointer overflow-hidden">
+                                    <div id="imagePreviewContainer" 
+                                         onclick="document.getElementById('logoInput').click()" 
+                                         class="w-32 h-32 rounded-2xl border-2 border-dashed border-purple-500/30 flex flex-col items-center justify-center bg-purple-900/20 hover:bg-purple-900/30 transition-all cursor-pointer overflow-hidden relative">
                                         <div id="uploadIcon" class="flex flex-col items-center justify-center">
                                             <i class="ph-upload-simple text-3xl text-purple-400 mb-2"></i>
                                             <span class="text-sm text-purple-300">Upload Logo</span>
                                             <span class="text-xs text-purple-400 mt-1">Max 5MB</span>
                                         </div>
-                                        <div id="imagePreview" class="hidden absolute inset-0">
-                                            <img class="w-full h-full object-cover rounded-xl" src="" alt="Token Logo Preview">
-                                        </div>
+                                        <div id="imagePreview" class="hidden absolute inset-0"></div>
                                         <input type="file" 
                                                id="logoInput"
                                                accept="image/*"
@@ -562,15 +654,19 @@
             </div>`;
         }
         
-        // Switch to verification step
-        configureStep.classList.add('hidden');
-        verifyStep.classList.remove('hidden');
+        // Update visibility with proper positioning
+        configureStep.style.display = 'none';
+        verifyStep.style.display = 'block';
+        verifyStep.style.marginTop = '0';
+        
+        // Smooth scroll to top
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
         
         // Update progress indicator
         updateProgress(2);
-        
-        // Scroll to top smoothly
-        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // Function to edit details and go back to configuration step
@@ -771,40 +867,50 @@
         return keypair.publicKey;
     }
 
-    // Handle Image Upload
+    // Enhanced image upload handling
     function handleImageUpload(event) {
         const input = event.target;
         const uploadIcon = document.getElementById('uploadIcon');
         const imagePreview = document.getElementById('imagePreview');
-        const previewImg = imagePreview.querySelector('img');
         const container = document.getElementById('imagePreviewContainer');
 
         if (input.files && input.files[0]) {
             const file = input.files[0];
             
-            // Check file size (5MB limit)
+            // Validate file size and type
             if (file.size > 5 * 1024 * 1024) {
                 alert('File size must be less than 5MB');
                 input.value = '';
                 return;
             }
 
+            if (!file.type.match('image.*')) {
+                alert('Please upload an image file');
+                input.value = '';
+                return;
+            }
+
             const reader = new FileReader();
             reader.onload = function(e) {
+                // Create or update image preview
+                if (!imagePreview.querySelector('img')) {
+                    const img = document.createElement('img');
+                    img.className = 'w-full h-full object-cover rounded-xl';
+                    imagePreview.appendChild(img);
+                }
+                const previewImg = imagePreview.querySelector('img');
                 previewImg.src = e.target.result;
+                
+                // Show preview, hide upload icon
                 uploadIcon.classList.add('hidden');
                 imagePreview.classList.remove('hidden');
                 
-                // Add remove button if it doesn't exist
+                // Add remove button
                 if (!container.querySelector('.remove-button')) {
                     const removeButton = document.createElement('button');
-                    removeButton.className = 'remove-button absolute top-2 right-2 bg-red-500/80 hover:bg-red-600 rounded-full p-1 transition-all';
+                    removeButton.className = 'remove-button absolute top-2 right-2 bg-red-500/80 hover:bg-red-600 rounded-full p-1 transition-all z-10';
                     removeButton.innerHTML = '<i class="ph-x text-white"></i>';
-                    removeButton.onclick = function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        resetUpload();
-                    };
+                    removeButton.onclick = resetUpload;
                     container.appendChild(removeButton);
                 }
             };
@@ -812,7 +918,13 @@
         }
     }
 
-    function resetUpload() {
+    // Reset image upload
+    function resetUpload(e) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
         const uploadIcon = document.getElementById('uploadIcon');
         const imagePreview = document.getElementById('imagePreview');
         const container = document.getElementById('imagePreviewContainer');
@@ -822,6 +934,9 @@
         input.value = '';
         uploadIcon.classList.remove('hidden');
         imagePreview.classList.add('hidden');
+        if (imagePreview.querySelector('img')) {
+            imagePreview.querySelector('img').remove();
+        }
         if (removeButton) {
             removeButton.remove();
         }
@@ -918,17 +1033,14 @@
     <script>
     function toggleMobileMenu() {
         const mobileMenu = document.getElementById('mobileMenu');
-        const isHidden = mobileMenu.classList.contains('hidden');
         
-        if (isHidden) {
+        if (mobileMenu.classList.contains('hidden')) {
             mobileMenu.classList.remove('hidden');
-            requestAnimationFrame(() => {
-                mobileMenu.style.opacity = '1';
-                mobileMenu.style.transform = 'translateY(0)';
-            });
+            // Force reflow
+            mobileMenu.offsetHeight;
+            mobileMenu.classList.add('active');
         } else {
-            mobileMenu.style.opacity = '0';
-            mobileMenu.style.transform = 'translateY(-1rem)';
+            mobileMenu.classList.remove('active');
             setTimeout(() => {
                 mobileMenu.classList.add('hidden');
             }, 300);
