@@ -18,7 +18,7 @@ docker compose up -d nginx
 
 # Wait for nginx
 echo "### Waiting for nginx to start..."
-sleep 10
+sleep 30
 
 # Request staging certificate
 echo "### Requesting staging certificate..."
