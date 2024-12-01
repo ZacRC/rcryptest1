@@ -178,30 +178,8 @@
 
         /* Mobile Menu Styles */
         #mobileMenu {
-            position: fixed;
-            top: var(--nav-height);
-            left: 0;
-            right: 0;
-            z-index: 40;
-            transform: translateY(-100%);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        #mobileMenu.active {
-            transform: translateY(0);
-        }
-
-        /* Ensure mobile menu is visible on mobile only */
-        @media (max-width: 768px) {
-            #mobileMenu {
-                display: block;
-            }
-        }
-
-        /* Enhanced Mobile Menu Styles */
-        #mobileMenu {
-            position: fixed;
-            top: var(--nav-height);
+            position: absolute;
+            top: 100%;
             left: 0;
             right: 0;
             z-index: 50;
@@ -218,10 +196,10 @@
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
 
-        /* Ensure proper mobile menu display */
+        /* Ensure mobile menu is visible on mobile only */
         @media (max-width: 768px) {
             #mobileMenu {
-                display: block;
+                display: block !important;
             }
         }
 
@@ -277,7 +255,7 @@
 
         <!-- Mobile Menu -->
         <div id="mobileMenu" 
-             class="hidden md:hidden fixed w-full bg-[#0d0926]/95 backdrop-blur-xl border-b border-purple-500/10">
+             class="md:hidden fixed w-full bg-[#0d0926]/95 backdrop-blur-xl border-b border-purple-500/10">
             <div class="container mx-auto p-6">
                 <div class="flex flex-col space-y-4">
                     <!-- Enhanced Mobile Navigation Links -->
@@ -1128,7 +1106,6 @@
             menuIcon.classList.add('ph-list');
         } else {
             // Open menu
-            mobileMenu.classList.remove('hidden');
             // Force reflow
             mobileMenu.offsetHeight;
             mobileMenu.classList.add('active');
