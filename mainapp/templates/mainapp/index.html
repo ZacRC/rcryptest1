@@ -175,6 +175,28 @@
         .verify-step-container {
             @apply max-w-4xl mx-auto;
         }
+
+        /* Mobile Menu Styles */
+        #mobileMenu {
+            position: fixed;
+            top: var(--nav-height);
+            left: 0;
+            right: 0;
+            z-index: 40;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #mobileMenu.active {
+            transform: translateY(0);
+        }
+
+        /* Ensure mobile menu is visible on mobile only */
+        @media (max-width: 768px) {
+            #mobileMenu {
+                display: block;
+            }
+        }
     </style>
 </head>
 <body class="text-gray-200">
@@ -211,7 +233,7 @@
 
         <!-- Mobile Menu -->
         <div id="mobileMenu" 
-             class="hidden md:hidden absolute top-full left-0 right-0 bg-[#0d0926]/95 backdrop-blur-xl border-b border-purple-500/10">
+             class="hidden md:hidden fixed w-full bg-[#0d0926]/95 backdrop-blur-xl border-b border-purple-500/10 transform -translate-y-full transition-transform duration-300">
             <div class="container mx-auto px-4 py-4">
                 <div class="flex flex-col space-y-4">
                     <a href="/" class="mobile-nav-link">Launch</a>
@@ -1029,19 +1051,41 @@
     <script>
     function toggleMobileMenu() {
         const mobileMenu = document.getElementById('mobileMenu');
+        const menuIcon = document.querySelector('.ph-list');
         
-        if (mobileMenu.classList.contains('hidden')) {
+        if (mobileMenu.classList.contains('active')) {
+            // Close menu
+            mobileMenu.classList.remove('active');
+            menuIcon.classList.remove('ph-x');
+            menuIcon.classList.add('ph-list');
+        } else {
+            // Open menu
             mobileMenu.classList.remove('hidden');
             // Force reflow
             mobileMenu.offsetHeight;
             mobileMenu.classList.add('active');
-        } else {
-            mobileMenu.classList.remove('active');
-            setTimeout(() => {
-                mobileMenu.classList.add('hidden');
-            }, 300);
+            menuIcon.classList.remove('ph-list');
+            menuIcon.classList.add('ph-x');
         }
     }
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuButton = document.querySelector('button[onclick="toggleMobileMenu()"]');
+        
+        if (!mobileMenu.contains(event.target) && !menuButton.contains(event.target) && mobileMenu.classList.contains('active')) {
+            toggleMobileMenu();
+        }
+    });
+
+    // Close mobile menu when screen is resized to desktop view
+    window.addEventListener('resize', function() {
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (window.innerWidth >= 768 && mobileMenu.classList.contains('active')) {
+            toggleMobileMenu();
+        }
+    });
     </script>
 
     <script>
