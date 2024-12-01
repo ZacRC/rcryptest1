@@ -219,6 +219,47 @@
         #mobileMenu a:nth-child(2) { transition-delay: 0.2s; }
         #mobileMenu a:nth-child(3) { transition-delay: 0.3s; }
         #mobileMenu button { transition-delay: 0.4s; }
+
+        /* Mobile Menu Styles */
+        .mobile-menu-item {
+            @apply flex items-center gap-3 px-4 py-3 rounded-xl text-purple-200 
+                   hover:bg-purple-500/10 transition-all duration-300;
+        }
+
+        .mobile-menu-item i {
+            @apply text-xl text-purple-400;
+        }
+
+        .mobile-wallet-btn {
+            @apply flex items-center justify-center gap-3 w-full px-4 py-3 rounded-xl
+                   bg-gradient-to-r from-purple-600 to-purple-800 
+                   hover:from-purple-700 hover:to-purple-900 
+                   text-white font-medium transition-all duration-300;
+        }
+
+        #mobileMenu {
+            animation: slideDown 0.3s ease-out forwards;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Ensure proper z-index */
+        nav {
+            z-index: 1000;
+        }
+
+        #mobileMenu {
+            z-index: 999;
+        }
     </style>
 </head>
 <body class="text-gray-200">
@@ -245,52 +286,36 @@
                     </button>
                 </div>
 
-                <!-- Mobile Menu Button -->
-                <button onclick="toggleMobileMenu()" 
-                        class="md:hidden text-purple-300 hover:text-purple-200">
+                <!-- Hamburger Menu Button -->
+                <button id="hamburgerBtn" 
+                        class="block md:hidden text-purple-300 hover:text-purple-200 focus:outline-none"
+                        onclick="toggleMobileMenu()">
                     <i class="ph-list text-2xl"></i>
                 </button>
             </div>
         </div>
 
-        <!-- Mobile Menu -->
+        <!-- Mobile Menu Dropdown -->
         <div id="mobileMenu" 
-             class="md:hidden fixed w-full bg-[#0d0926]/95 backdrop-blur-xl border-b border-purple-500/10">
-            <div class="container mx-auto p-6">
-                <div class="flex flex-col space-y-4">
-                    <!-- Enhanced Mobile Navigation Links -->
-                    <a href="/" class="flex items-center justify-between p-4 rounded-xl bg-purple-900/20 border border-purple-500/20 hover:bg-purple-900/40 transition-all duration-300">
-                        <div class="flex items-center gap-3">
-                            <i class="ph-rocket-launch text-xl text-purple-400"></i>
-                            <span class="text-purple-200 font-medium">Launch</span>
-                        </div>
-                        <i class="ph-caret-right text-purple-400"></i>
+             class="hidden absolute top-full left-0 right-0 bg-[#0d0926] border-b border-purple-500/10 shadow-lg md:hidden">
+            <div class="container mx-auto p-4">
+                <div class="flex flex-col space-y-3">
+                    <a href="/" class="mobile-menu-item">
+                        <i class="ph-rocket-launch"></i>
+                        <span>Launch</span>
                     </a>
-                    
-                    <a href="/guide" class="flex items-center justify-between p-4 rounded-xl bg-purple-900/20 border border-purple-500/20 hover:bg-purple-900/40 transition-all duration-300">
-                        <div class="flex items-center gap-3">
-                            <i class="ph-book-open text-xl text-purple-400"></i>
-                            <span class="text-purple-200 font-medium">Guide</span>
-                        </div>
-                        <i class="ph-caret-right text-purple-400"></i>
+                    <a href="/guide" class="mobile-menu-item">
+                        <i class="ph-book-open"></i>
+                        <span>Guide</span>
                     </a>
-                    
-                    <a href="/docs" class="flex items-center justify-between p-4 rounded-xl bg-purple-900/20 border border-purple-500/20 hover:bg-purple-900/40 transition-all duration-300">
-                        <div class="flex items-center gap-3">
-                            <i class="ph-file-text text-xl text-purple-400"></i>
-                            <span class="text-purple-200 font-medium">Docs</span>
-                        </div>
-                        <i class="ph-caret-right text-purple-400"></i>
+                    <a href="/docs" class="mobile-menu-item">
+                        <i class="ph-file-text"></i>
+                        <span>Docs</span>
                     </a>
-
                     <div class="h-px bg-purple-500/20 my-2"></div>
-
-                    <!-- Enhanced Mobile Wallet Button -->
-                    <button onclick="connectWallet()" 
-                            id="mobileWalletButton"
-                            class="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 p-4 rounded-xl transition-all duration-300 sol-glow flex items-center justify-center gap-3">
-                        <i class="ph-wallet text-xl"></i>
-                        <span class="font-medium">Connect Wallet</span>
+                    <button onclick="connectWallet()" class="mobile-wallet-btn">
+                        <i class="ph-wallet"></i>
+                        <span>Connect Wallet</span>
                     </button>
                 </div>
             </div>
@@ -1097,38 +1122,45 @@
     <script>
     function toggleMobileMenu() {
         const mobileMenu = document.getElementById('mobileMenu');
-        const menuIcon = document.querySelector('button[onclick="toggleMobileMenu()"] i');
-        
-        if (mobileMenu.classList.contains('active')) {
-            // Close menu
-            mobileMenu.classList.remove('active');
-            menuIcon.classList.remove('ph-x');
-            menuIcon.classList.add('ph-list');
-        } else {
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const icon = hamburgerBtn.querySelector('i');
+
+        if (mobileMenu.classList.contains('hidden')) {
             // Open menu
-            // Force reflow
-            mobileMenu.offsetHeight;
-            mobileMenu.classList.add('active');
-            menuIcon.classList.remove('ph-list');
-            menuIcon.classList.add('ph-x');
+            mobileMenu.classList.remove('hidden');
+            icon.classList.remove('ph-list');
+            icon.classList.add('ph-x');
+        } else {
+            // Close menu
+            mobileMenu.classList.add('hidden');
+            icon.classList.remove('ph-x');
+            icon.classList.add('ph-list');
         }
     }
 
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', function(event) {
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
         const mobileMenu = document.getElementById('mobileMenu');
-        const menuButton = document.querySelector('button[onclick="toggleMobileMenu()"]');
-        
-        if (!mobileMenu.contains(event.target) && !menuButton.contains(event.target) && mobileMenu.classList.contains('active')) {
-            toggleMobileMenu();
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+
+        if (!mobileMenu.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+            mobileMenu.classList.add('hidden');
+            const icon = hamburgerBtn.querySelector('i');
+            icon.classList.remove('ph-x');
+            icon.classList.add('ph-list');
         }
     });
 
-    // Close mobile menu when screen is resized to desktop view
-    window.addEventListener('resize', function() {
-        const mobileMenu = document.getElementById('mobileMenu');
-        if (window.innerWidth >= 768 && mobileMenu.classList.contains('active')) {
-            toggleMobileMenu();
+    // Close menu on window resize
+    window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) { // md breakpoint
+            const mobileMenu = document.getElementById('mobileMenu');
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const icon = hamburgerBtn.querySelector('i');
+            
+            mobileMenu.classList.add('hidden');
+            icon.classList.remove('ph-x');
+            icon.classList.add('ph-list');
         }
     });
     </script>
