@@ -266,220 +266,344 @@
             </div>
         </div>
 
-        <!-- Enhanced Token Creation Form -->
-        <div class="gradient-border rounded-3xl">
-            <div class="bg-[#0d0926] rounded-3xl p-8">
-                <form class="space-y-8">
-                    <!-- Token Basics Section -->
-                    <div class="space-y-6">
-                        <div class="flex items-center gap-2 mb-6">
-                            <i class="ph-coin text-2xl text-purple-400"></i>
-                            <h3 class="text-xl font-semibold text-purple-300">Token Basics</h3>
-                        </div>
-                        
-                        <!-- Image Upload Section -->
-                        <div class="flex flex-col sm:flex-row gap-4 sm:gap-8 items-start mb-8">
-                            <div class="w-full sm:w-1/3">
-                                <label class="block text-sm font-medium mb-4 text-purple-200">Token Logo*</label>
-                                <div class="relative group">
-                                    <div id="imagePreviewContainer" 
-                                         onclick="document.getElementById('logoInput').click()" 
-                                         class="w-32 h-32 rounded-2xl border-2 border-dashed border-purple-500/30 flex flex-col items-center justify-center bg-purple-900/20 hover:bg-purple-900/30 transition-all cursor-pointer overflow-hidden relative">
-                                        <div id="uploadIcon" class="flex flex-col items-center justify-center">
-                                            <i class="ph-upload-simple text-3xl text-purple-400 mb-2"></i>
-                                            <span class="text-sm text-purple-300">Upload Logo</span>
-                                            <span class="text-xs text-purple-400 mt-1">Max 5MB</span>
-                                        </div>
-                                        <div id="imagePreview" class="hidden absolute inset-0"></div>
-                                        <input type="file" 
-                                               id="logoInput"
-                                               accept="image/*"
-                                               class="hidden"
-                                               onchange="handleImageUpload(event)">
-                                    </div>
-                                </div>
+        <!-- Token Creation Form and Verification Step Container -->
+        <div id="formContainer">
+            <!-- Enhanced Token Creation Form -->
+            <div id="configureStep" class="gradient-border rounded-3xl">
+                <div class="bg-[#0d0926] rounded-3xl p-8">
+                    <form class="space-y-8">
+                        <!-- Token Basics Section -->
+                        <div class="space-y-6">
+                            <div class="flex items-center gap-2 mb-6">
+                                <i class="ph-coin text-2xl text-purple-400"></i>
+                                <h3 class="text-xl font-semibold text-purple-300">Token Basics</h3>
                             </div>
                             
-                            <div class="w-full sm:w-2/3 space-y-4">
+                            <!-- Image Upload Section -->
+                            <div class="flex flex-col sm:flex-row gap-4 sm:gap-8 items-start mb-8">
+                                <div class="w-full sm:w-1/3">
+                                    <label class="block text-sm font-medium mb-4 text-purple-200">Token Logo*</label>
+                                    <div class="relative group">
+                                        <div id="imagePreviewContainer" 
+                                             onclick="document.getElementById('logoInput').click()" 
+                                             class="w-32 h-32 rounded-2xl border-2 border-dashed border-purple-500/30 flex flex-col items-center justify-center bg-purple-900/20 hover:bg-purple-900/30 transition-all cursor-pointer overflow-hidden relative">
+                                            <div id="uploadIcon" class="flex flex-col items-center justify-center">
+                                                <i class="ph-upload-simple text-3xl text-purple-400 mb-2"></i>
+                                                <span class="text-sm text-purple-300">Upload Logo</span>
+                                                <span class="text-xs text-purple-400 mt-1">Max 5MB</span>
+                                            </div>
+                                            <div id="imagePreview" class="hidden absolute inset-0"></div>
+                                            <input type="file" 
+                                                   id="logoInput"
+                                                   accept="image/*"
+                                                   class="hidden"
+                                                   onchange="handleImageUpload(event)">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="w-full sm:w-2/3 space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2 text-purple-200">Token Name*</label>
+                                        <input type="text" 
+                                               class="w-full px-4 py-3 rounded-xl input-field focus:outline-none"
+                                               placeholder="e.g., Solana Moon">
+                                        <p class="text-xs text-purple-300/60 mt-1">
+                                            Choose a memorable name for your token
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2 text-purple-200">Token Symbol*</label>
+                                        <input type="text" 
+                                               class="w-full px-4 py-3 rounded-xl input-field focus:outline-none uppercase"
+                                               maxlength="10"
+                                               placeholder="e.g., MOON">
+                                        <p class="text-xs text-purple-300/60 mt-1">
+                                            3-10 characters, letters only
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Supply and Decimals -->
+                            <div class="grid md:grid-cols-2 gap-6">
                                 <div>
-                                    <label class="block text-sm font-medium mb-2 text-purple-200">Token Name*</label>
+                                    <label class="block text-sm font-medium mb-2 text-purple-200">
+                                        Initial Supply*
+                                        <span class="text-purple-300/60 text-xs ml-2">
+                                            (Total tokens to create)
+                                        </span>
+                                    </label>
+                                    <div class="relative">
+                                        <input type="number" 
+                                               class="w-full px-4 py-3 rounded-xl input-field focus:outline-none"
+                                               placeholder="1000000000">
+                                        <div class="absolute right-4 top-1/2 -translate-y-1/2 text-purple-300/60 text-sm">
+                                            tokens
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium mb-2 text-purple-200">
+                                        Decimals*
+                                        <span class="text-purple-300/60 text-xs ml-2">
+                                            (Token divisibility)
+                                        </span>
+                                    </label>
+                                    <select class="w-full px-4 py-3 rounded-xl input-field focus:outline-none appearance-none">
+                                        <option value="9">9 (Recommended)</option>
+                                        <option value="6">6</option>
+                                        <option value="18">18</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Marketing Section -->
+                        <div class="space-y-6 pt-6 border-t border-purple-500/10">
+                            <div class="flex items-center gap-2 mb-6">
+                                <i class="ph-megaphone text-2xl text-purple-400"></i>
+                                <h3 class="text-xl font-semibold text-purple-300">Marketing & Social</h3>
+                            </div>
+
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2 text-purple-200">
+                                        <i class="ph-globe text-lg mr-1"></i>
+                                        Website URL
+                                    </label>
+                                    <input type="url" 
+                                           class="w-full px-4 py-3 rounded-xl input-field focus:outline-none"
+                                           placeholder="https://yourproject.com">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium mb-2 text-purple-200">
+                                        <i class="ph-telegram-logo text-lg mr-1"></i>
+                                        Telegram Group
+                                    </label>
                                     <input type="text" 
                                            class="w-full px-4 py-3 rounded-xl input-field focus:outline-none"
-                                           placeholder="e.g., Solana Moon">
-                                    <p class="text-xs text-purple-300/60 mt-1">
-                                        Choose a memorable name for your token
-                                    </p>
+                                           placeholder="@yourtelegram">
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-medium mb-2 text-purple-200">Token Symbol*</label>
+                                    <label class="block text-sm font-medium mb-2 text-purple-200">
+                                        <i class="ph-twitter-logo text-lg mr-1"></i>
+                                        Twitter Handle
+                                    </label>
                                     <input type="text" 
-                                           class="w-full px-4 py-3 rounded-xl input-field focus:outline-none uppercase"
-                                           maxlength="10"
-                                           placeholder="e.g., MOON">
-                                    <p class="text-xs text-purple-300/60 mt-1">
-                                        3-10 characters, letters only
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Supply and Decimals -->
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-medium mb-2 text-purple-200">
-                                    Initial Supply*
-                                    <span class="text-purple-300/60 text-xs ml-2">
-                                        (Total tokens to create)
-                                    </span>
-                                </label>
-                                <div class="relative">
-                                    <input type="number" 
                                            class="w-full px-4 py-3 rounded-xl input-field focus:outline-none"
-                                           placeholder="1000000000">
-                                    <div class="absolute right-4 top-1/2 -translate-y-1/2 text-purple-300/60 text-sm">
-                                        tokens
+                                           placeholder="@yourtwitter">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium mb-2 text-purple-200">
+                                        <i class="ph-discord-logo text-lg mr-1"></i>
+                                        Discord Server
+                                    </label>
+                                    <input type="text" 
+                                           class="w-full px-4 py-3 rounded-xl input-field focus:outline-none"
+                                           placeholder="discord.gg/yourserver">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Advanced Settings -->
+                        <div class="space-y-6 pt-6 border-t border-purple-500/10">
+                            <div class="flex items-center gap-2 mb-6">
+                                <i class="ph-gear text-2xl text-purple-400"></i>
+                                <h3 class="text-xl font-semibold text-purple-300">Advanced Settings</h3>
+                            </div>
+
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between p-4 rounded-xl bg-purple-900/20 border border-purple-500/20">
+                                        <div>
+                                            <label class="text-sm font-medium text-purple-200">Enable Burning</label>
+                                            <p class="text-xs text-purple-300/60">Allow tokens to be permanently destroyed</p>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" class="sr-only peer">
+                                            <div class="w-11 h-6 bg-purple-900 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+                                        </label>
+                                    </div>
+
+                                    <div class="flex items-center justify-between p-4 rounded-xl bg-purple-900/20 border border-purple-500/20">
+                                        <div>
+                                            <label class="text-sm font-medium text-purple-200">Enable Minting</label>
+                                            <p class="text-xs text-purple-300/60">Allow creation of new tokens</p>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" class="sr-only peer">
+                                            <div class="w-11 h-6 bg-purple-900 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between p-4 rounded-xl bg-purple-900/20 border border-purple-500/20">
+                                        <div>
+                                            <label class="text-sm font-medium text-purple-200">Pausable</label>
+                                            <p class="text-xs text-purple-300/60">Ability to pause token transfers</p>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" class="sr-only peer">
+                                            <div class="w-11 h-6 bg-purple-900 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+                                        </label>
+                                    </div>
+
+                                    <div class="flex items-center justify-between p-4 rounded-xl bg-purple-900/20 border border-purple-500/20">
+                                        <div>
+                                            <label class="text-sm font-medium text-purple-200">Renounce Ownership</label>
+                                            <p class="text-xs text-purple-300/60">Remove owner privileges after launch</p>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" class="sr-only peer">
+                                            <div class="w-11 h-6 bg-purple-900 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
-
-                            <div>
-                                <label class="block text-sm font-medium mb-2 text-purple-200">
-                                    Decimals*
-                                    <span class="text-purple-300/60 text-xs ml-2">
-                                        (Token divisibility)
-                                    </span>
-                                </label>
-                                <select class="w-full px-4 py-3 rounded-xl input-field focus:outline-none appearance-none">
-                                    <option value="9">9 (Recommended)</option>
-                                    <option value="6">6</option>
-                                    <option value="18">18</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Marketing Section -->
-                    <div class="space-y-6 pt-6 border-t border-purple-500/10">
-                        <div class="flex items-center gap-2 mb-6">
-                            <i class="ph-megaphone text-2xl text-purple-400"></i>
-                            <h3 class="text-xl font-semibold text-purple-300">Marketing & Social</h3>
                         </div>
 
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-medium mb-2 text-purple-200">
-                                    <i class="ph-globe text-lg mr-1"></i>
-                                    Website URL
-                                </label>
-                                <input type="url" 
-                                       class="w-full px-4 py-3 rounded-xl input-field focus:outline-none"
-                                       placeholder="https://yourproject.com">
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium mb-2 text-purple-200">
-                                    <i class="ph-telegram-logo text-lg mr-1"></i>
-                                    Telegram Group
-                                </label>
-                                <input type="text" 
-                                       class="w-full px-4 py-3 rounded-xl input-field focus:outline-none"
-                                       placeholder="@yourtelegram">
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium mb-2 text-purple-200">
-                                    <i class="ph-twitter-logo text-lg mr-1"></i>
-                                    Twitter Handle
-                                </label>
-                                <input type="text" 
-                                       class="w-full px-4 py-3 rounded-xl input-field focus:outline-none"
-                                       placeholder="@yourtwitter">
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium mb-2 text-purple-200">
-                                    <i class="ph-discord-logo text-lg mr-1"></i>
-                                    Discord Server
-                                </label>
-                                <input type="text" 
-                                       class="w-full px-4 py-3 rounded-xl input-field focus:outline-none"
-                                       placeholder="discord.gg/yourserver">
+                        <!-- Create Button -->
+                        <div class="pt-8">
+                            <button type="button" 
+                                    onclick="showVerification()"
+                                    class="w-full bg-gradient-to-r from-purple-600 to-green-500 hover:from-purple-700 hover:to-green-600 px-6 py-4 rounded-xl font-medium transition-all duration-300 sol-glow">
+                                Create Token
+                            </button>
+                            <div class="flex items-center justify-center gap-2 mt-4 text-purple-300/60 text-sm">
+                                <i class="ph-info"></i>
+                                <span>Total cost: 1.6 SOL</span>
                             </div>
                         </div>
-                    </div>
+                    </form>
+                </div>
+            </div>
 
-                    <!-- Advanced Settings -->
-                    <div class="space-y-6 pt-6 border-t border-purple-500/10">
-                        <div class="flex items-center gap-2 mb-6">
-                            <i class="ph-gear text-2xl text-purple-400"></i>
-                            <h3 class="text-xl font-semibold text-purple-300">Advanced Settings</h3>
+            <!-- Verification Step (initially hidden) -->
+            <div id="verifyStep" class="hidden">
+                <div class="gradient-border rounded-3xl">
+                    <div class="bg-[#0d0926] rounded-3xl p-8">
+                        <!-- Header -->
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="flex items-center gap-2">
+                                <i class="ph-check-circle text-2xl text-purple-400"></i>
+                                <h3 class="text-xl font-semibold text-purple-300">Verify Token Details</h3>
+                            </div>
+                            <button onclick="editDetails()" class="flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300 transition-colors">
+                                <i class="ph-pencil-simple"></i>
+                                Edit Details
+                            </button>
                         </div>
 
-                        <div class="grid md:grid-cols-2 gap-8">
+                        <!-- Token Preview Card -->
+                        <div class="bg-purple-900/20 rounded-2xl p-6 mb-8 border border-purple-500/20">
+                            <div class="flex items-start gap-6">
+                                <div id="tokenLogoPreview" class="w-24 h-24 rounded-xl bg-purple-900/40 overflow-hidden border border-purple-500/20">
+                                    <!-- Logo will be inserted here -->
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <h4 id="tokenNamePreview" class="text-2xl font-bold text-purple-200">Token Name</h4>
+                                        <span id="tokenSymbolPreview" class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-sm border border-purple-500/20">SYMBOL</span>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4 mt-4">
+                                        <div>
+                                            <span class="text-sm text-purple-300/60">Initial Supply</span>
+                                            <p id="tokenSupplyPreview" class="text-purple-200 font-medium">1,000,000,000</p>
+                                        </div>
+                                        <div>
+                                            <span class="text-sm text-purple-300/60">Decimals</span>
+                                            <p id="tokenDecimalsPreview" class="text-purple-200 font-medium">9</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Details Sections -->
+                        <div class="space-y-8">
+                            <!-- Social Links -->
                             <div class="space-y-4">
-                                <div class="flex items-center justify-between p-4 rounded-xl bg-purple-900/20 border border-purple-500/20">
-                                    <div>
-                                        <label class="text-sm font-medium text-purple-200">Enable Burning</label>
-                                        <p class="text-xs text-purple-300/60">Allow tokens to be permanently destroyed</p>
-                                    </div>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" class="sr-only peer">
-                                        <div class="w-11 h-6 bg-purple-900 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
-                                    </label>
+                                <div class="flex items-center gap-2">
+                                    <i class="ph-share-network text-xl text-purple-400"></i>
+                                    <h4 class="text-lg font-semibold text-purple-300">Social Links</h4>
                                 </div>
-
-                                <div class="flex items-center justify-between p-4 rounded-xl bg-purple-900/20 border border-purple-500/20">
-                                    <div>
-                                        <label class="text-sm font-medium text-purple-200">Enable Minting</label>
-                                        <p class="text-xs text-purple-300/60">Allow creation of new tokens</p>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div id="websitePreview" class="flex items-center gap-2 p-3 rounded-xl bg-purple-900/20 border border-purple-500/20">
+                                        <i class="ph-globe text-purple-400"></i>
+                                        <span class="text-sm text-purple-200 truncate">Website</span>
                                     </div>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" class="sr-only peer">
-                                        <div class="w-11 h-6 bg-purple-900 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
-                                    </label>
+                                    <div id="telegramPreview" class="flex items-center gap-2 p-3 rounded-xl bg-purple-900/20 border border-purple-500/20">
+                                        <i class="ph-telegram-logo text-purple-400"></i>
+                                        <span class="text-sm text-purple-200 truncate">Telegram</span>
+                                    </div>
+                                    <div id="twitterPreview" class="flex items-center gap-2 p-3 rounded-xl bg-purple-900/20 border border-purple-500/20">
+                                        <i class="ph-twitter-logo text-purple-400"></i>
+                                        <span class="text-sm text-purple-200 truncate">Twitter</span>
+                                    </div>
+                                    <div id="discordPreview" class="flex items-center gap-2 p-3 rounded-xl bg-purple-900/20 border border-purple-500/20">
+                                        <i class="ph-discord-logo text-purple-400"></i>
+                                        <span class="text-sm text-purple-200 truncate">Discord</span>
+                                    </div>
                                 </div>
                             </div>
 
+                            <!-- Token Features -->
                             <div class="space-y-4">
-                                <div class="flex items-center justify-between p-4 rounded-xl bg-purple-900/20 border border-purple-500/20">
-                                    <div>
-                                        <label class="text-sm font-medium text-purple-200">Pausable</label>
-                                        <p class="text-xs text-purple-300/60">Ability to pause token transfers</p>
-                                    </div>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" class="sr-only peer">
-                                        <div class="w-11 h-6 bg-purple-900 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
-                                    </label>
+                                <div class="flex items-center gap-2">
+                                    <i class="ph-gear text-xl text-purple-400"></i>
+                                    <h4 class="text-lg font-semibold text-purple-300">Token Features</h4>
                                 </div>
+                                <div id="featuresPreview" class="grid grid-cols-2 gap-4">
+                                    <!-- Features will be populated here -->
+                                </div>
+                            </div>
 
-                                <div class="flex items-center justify-between p-4 rounded-xl bg-purple-900/20 border border-purple-500/20">
-                                    <div>
-                                        <label class="text-sm font-medium text-purple-200">Renounce Ownership</label>
-                                        <p class="text-xs text-purple-300/60">Remove owner privileges after launch</p>
-                                    </div>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" class="sr-only peer">
-                                        <div class="w-11 h-6 bg-purple-900 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
-                                    </label>
+                            <!-- Estimated Costs -->
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-2">
+                                    <i class="ph-currency-circle-dollar text-xl text-purple-400"></i>
+                                    <h4 class="text-lg font-semibold text-purple-300">Deployment Costs</h4>
                                 </div>
+                                <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
+                                    <div class="flex justify-between items-center mb-3">
+                                        <span class="text-purple-300">Network Fee</span>
+                                        <span class="text-purple-200">0.00001 SOL</span>
+                                    </div>
+                                    <div class="flex justify-between items-center mb-3">
+                                        <span class="text-purple-300">Service Fee</span>
+                                        <span class="text-purple-200">1.6 SOL</span>
+                                    </div>
+                                    <div class="h-px bg-purple-500/20 my-3"></div>
+                                    <div class="flex justify-between items-center font-semibold">
+                                        <span class="text-purple-300">Total</span>
+                                        <span class="text-purple-200">1.6 SOL</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex gap-4 pt-6">
+                                <button onclick="goBack()" 
+                                        class="flex-1 px-6 py-4 rounded-xl border border-purple-500/20 text-purple-300 hover:bg-purple-500/10 transition-all duration-300 flex items-center justify-center gap-2">
+                                    <i class="ph-arrow-left"></i>
+                                    Back
+                                </button>
+                                <button onclick="deployToken()" 
+                                        class="flex-1 bg-gradient-to-r from-purple-600 to-green-500 hover:from-purple-700 hover:to-green-600 px-6 py-4 rounded-xl font-medium transition-all duration-300 sol-glow flex items-center justify-center gap-2">
+                                    Deploy Token
+                                    <i class="ph-arrow-right"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Create Button -->
-                    <div class="pt-8">
-                        <button type="button" 
-                                onclick="showVerification()"
-                                class="w-full bg-gradient-to-r from-purple-600 to-green-500 hover:from-purple-700 hover:to-green-600 px-6 py-4 rounded-xl font-medium transition-all duration-300 sol-glow">
-                            Create Token
-                        </button>
-                        <div class="flex items-center justify-center gap-2 mt-4 text-purple-300/60 text-sm">
-                            <i class="ph-info"></i>
-                            <span>Total cost: 1.6 SOL</span>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </main>
@@ -491,136 +615,15 @@
         </div>
     </footer>
 
-    <!-- Verification Step (initially hidden) -->
-    <div id="verifyStep" class="hidden mx-auto px-4 sm:px-6 max-w-4xl">
-        <div class="gradient-border rounded-3xl">
-            <div class="bg-[#0d0926] rounded-3xl p-8">
-                <!-- Header -->
-                <div class="flex items-center justify-between mb-8">
-                    <div class="flex items-center gap-2">
-                        <i class="ph-check-circle text-2xl text-purple-400"></i>
-                        <h3 class="text-xl font-semibold text-purple-300">Verify Token Details</h3>
-                    </div>
-                    <button onclick="editDetails()" class="flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300 transition-colors">
-                        <i class="ph-pencil-simple"></i>
-                        Edit Details
-                    </button>
-                </div>
-
-                <!-- Token Preview Card -->
-                <div class="bg-purple-900/20 rounded-2xl p-6 mb-8 border border-purple-500/20">
-                    <div class="flex items-start gap-6">
-                        <div id="tokenLogoPreview" class="w-24 h-24 rounded-xl bg-purple-900/40 overflow-hidden border border-purple-500/20">
-                            <!-- Logo will be inserted here -->
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex items-center gap-3 mb-2">
-                                <h4 id="tokenNamePreview" class="text-2xl font-bold text-purple-200">Token Name</h4>
-                                <span id="tokenSymbolPreview" class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-sm border border-purple-500/20">SYMBOL</span>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4 mt-4">
-                                <div>
-                                    <span class="text-sm text-purple-300/60">Initial Supply</span>
-                                    <p id="tokenSupplyPreview" class="text-purple-200 font-medium">1,000,000,000</p>
-                                </div>
-                                <div>
-                                    <span class="text-sm text-purple-300/60">Decimals</span>
-                                    <p id="tokenDecimalsPreview" class="text-purple-200 font-medium">9</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Details Sections -->
-                <div class="space-y-8">
-                    <!-- Social Links -->
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-2">
-                            <i class="ph-share-network text-xl text-purple-400"></i>
-                            <h4 class="text-lg font-semibold text-purple-300">Social Links</h4>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div id="websitePreview" class="flex items-center gap-2 p-3 rounded-xl bg-purple-900/20 border border-purple-500/20">
-                                <i class="ph-globe text-purple-400"></i>
-                                <span class="text-sm text-purple-200 truncate">Website</span>
-                            </div>
-                            <div id="telegramPreview" class="flex items-center gap-2 p-3 rounded-xl bg-purple-900/20 border border-purple-500/20">
-                                <i class="ph-telegram-logo text-purple-400"></i>
-                                <span class="text-sm text-purple-200 truncate">Telegram</span>
-                            </div>
-                            <div id="twitterPreview" class="flex items-center gap-2 p-3 rounded-xl bg-purple-900/20 border border-purple-500/20">
-                                <i class="ph-twitter-logo text-purple-400"></i>
-                                <span class="text-sm text-purple-200 truncate">Twitter</span>
-                            </div>
-                            <div id="discordPreview" class="flex items-center gap-2 p-3 rounded-xl bg-purple-900/20 border border-purple-500/20">
-                                <i class="ph-discord-logo text-purple-400"></i>
-                                <span class="text-sm text-purple-200 truncate">Discord</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Token Features -->
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-2">
-                            <i class="ph-gear text-xl text-purple-400"></i>
-                            <h4 class="text-lg font-semibold text-purple-300">Token Features</h4>
-                        </div>
-                        <div id="featuresPreview" class="grid grid-cols-2 gap-4">
-                            <!-- Features will be populated here -->
-                        </div>
-                    </div>
-
-                    <!-- Estimated Costs -->
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-2">
-                            <i class="ph-currency-circle-dollar text-xl text-purple-400"></i>
-                            <h4 class="text-lg font-semibold text-purple-300">Deployment Costs</h4>
-                        </div>
-                        <div class="bg-purple-900/20 rounded-xl p-4 border border-purple-500/20">
-                            <div class="flex justify-between items-center mb-3">
-                                <span class="text-purple-300">Network Fee</span>
-                                <span class="text-purple-200">0.00001 SOL</span>
-                            </div>
-                            <div class="flex justify-between items-center mb-3">
-                                <span class="text-purple-300">Service Fee</span>
-                                <span class="text-purple-200">1.6 SOL</span>
-                            </div>
-                            <div class="h-px bg-purple-500/20 my-3"></div>
-                            <div class="flex justify-between items-center font-semibold">
-                                <span class="text-purple-300">Total</span>
-                                <span class="text-purple-200">1.6 SOL</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="flex gap-4 pt-6">
-                        <button onclick="goBack()" 
-                                class="flex-1 px-6 py-4 rounded-xl border border-purple-500/20 text-purple-300 hover:bg-purple-500/10 transition-all duration-300 flex items-center justify-center gap-2">
-                            <i class="ph-arrow-left"></i>
-                            Back
-                        </button>
-                        <button onclick="deployToken()" 
-                                class="flex-1 bg-gradient-to-r from-purple-600 to-green-500 hover:from-purple-700 hover:to-green-600 px-6 py-4 rounded-xl font-medium transition-all duration-300 sol-glow flex items-center justify-center gap-2">
-                            Deploy Token
-                            <i class="ph-arrow-right"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Scripts -->
     <script>
     // Get references to the main elements
-    const configureStep = document.querySelector('form').parentElement.parentElement;
+    const configureStep = document.getElementById('configureStep');
     const verifyStep = document.getElementById('verifyStep');
 
     // Function to show verification step
     function showVerification() {
-        const configureStep = document.querySelector('form').parentElement.parentElement;
+        const configureStep = document.getElementById('configureStep');
         const verifyStep = document.getElementById('verifyStep');
         
         // Get all form values
@@ -654,16 +657,9 @@
             </div>`;
         }
         
-        // Update visibility with proper positioning
+        // Update visibility
         configureStep.style.display = 'none';
         verifyStep.style.display = 'block';
-        verifyStep.style.marginTop = '0';
-        
-        // Smooth scroll to top
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
         
         // Update progress indicator
         updateProgress(2);
@@ -1051,12 +1047,12 @@
     <script>
     // Update the goBack function
     function goBack() {
-        const configureStep = document.querySelector('form').parentElement.parentElement;
+        const configureStep = document.getElementById('configureStep');
         const verifyStep = document.getElementById('verifyStep');
         
         // Hide verify step and show configure step
-        verifyStep.classList.add('hidden');
-        configureStep.classList.remove('hidden');
+        verifyStep.style.display = 'none';
+        configureStep.style.display = 'block';
         
         // Update progress indicator
         updateProgress(1);
