@@ -359,6 +359,29 @@
             display: block !important;
             animation: slideDown 0.3s ease-out forwards;
         }
+
+        /* Wallet Button Styles */
+        .wallet-button {
+            @apply bg-gradient-to-r from-purple-600 to-purple-800 
+                   hover:from-purple-700 hover:to-purple-900 
+                   px-4 py-2 rounded-xl transition-all duration-300 
+                   flex items-center gap-2 relative;
+        }
+
+        .wallet-button.connected {
+            @apply from-purple-700 to-purple-900;
+        }
+
+        /* Connected State Animation */
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
     </style>
 </head>
 <body class="text-gray-200">
@@ -378,9 +401,16 @@
                 <a href="/guide" class="text-purple-300 hover:text-purple-200">Guide</a>
                 <a href="/docs" class="text-purple-300 hover:text-purple-200">Docs</a>
                 <div class="h-4 w-px bg-purple-500/20"></div>
-                <button onclick="connectWallet()" class="wallet-button">
-                    <i class="ph-wallet"></i>
-                    <span>Connect Wallet</span>
+                <button id="desktopWalletBtn" onclick="connectWallet()" 
+                        class="wallet-button group relative">
+                    <div class="flex items-center gap-2">
+                        <i class="ph-wallet"></i>
+                        <span id="desktopWalletText">Connect Exodus</span>
+                    </div>
+                    <!-- Connected State Indicator -->
+                    <div id="desktopConnectedState" class="hidden absolute -top-1 -right-1">
+                        <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                    </div>
                 </button>
             </div>
 
@@ -402,10 +432,14 @@
                     <a href="/guide" class="block py-3 text-purple-300 hover:text-purple-200 text-lg">Guide</a>
                     <a href="/docs" class="block py-3 text-purple-300 hover:text-purple-200 text-lg">Docs</a>
                     <div class="h-px bg-purple-500/20 my-3"></div>
-                    <button onclick="connectWallet()" 
-                            class="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-4 py-3 rounded-xl text-white flex items-center justify-center gap-2">
+                    <button id="mobileWalletBtn" onclick="connectWallet()" 
+                            class="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-4 py-3 rounded-xl text-white flex items-center justify-center gap-2 relative">
                         <i class="ph-wallet"></i>
-                        <span>Connect Wallet</span>
+                        <span id="mobileWalletText">Connect Exodus</span>
+                        <!-- Connected State Indicator -->
+                        <div id="mobileConnectedState" class="hidden absolute -top-1 -right-1">
+                            <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                        </div>
                     </button>
                 </div>
             </div>
