@@ -1300,5 +1300,84 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     </script>
+
+    <script>
+    async function connectWallet() {
+        try {
+            // Check if already connected
+            if (window.exodus && await window.exodus.solana.isConnected()) {
+                const publicKey = await window.exodus.solana.getAccount();
+                if (publicKey) {
+                    // Update UI with connected wallet
+                    const shortAddress = `${publicKey.slice(0, 4)}...${publicKey.slice(-4)}`;
+                    document.getElementById('desktopWalletText').textContent = shortAddress;
+                    document.getElementById('mobileWalletText').textContent = shortAddress;
+                    document.getElementById('desktopConnectedState').classList.remove('hidden');
+                    document.getElementById('mobileConnectedState').classList.remove('hidden');
+                    return;
+                }
+            }
+
+            // If not connected, connect
+            if (!window.exodus) {
+                alert("Please install Exodus Wallet");
+                return;
+            }
+
+            // Connect wallet
+            await window.exodus.solana.connect();
+            
+            // Get and display address
+            const publicKey = await window.exodus.solana.getAccount();
+            const shortAddress = `${publicKey.slice(0, 4)}...${publicKey.slice(-4)}`;
+            
+            // Update UI elements
+            document.getElementById('desktopWalletText').textContent = shortAddress;
+            document.getElementById('mobileWalletText').textContent = shortAddress;
+            document.getElementById('desktopConnectedState').classList.remove('hidden');
+            document.getElementById('mobileConnectedState').classList.remove('hidden');
+
+        } catch (error) {
+            console.error("Wallet connection error:", error);
+            alert("Failed to connect wallet");
+        }
+    }
+
+    // Check wallet connection on page load
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            if (window.exodus && await window.exodus.solana.isConnected()) {
+                const publicKey = await window.exodus.solana.getAccount();
+                if (publicKey) {
+                    const shortAddress = `${publicKey.slice(0, 4)}...${publicKey.slice(-4)}`;
+                    document.getElementById('desktopWalletText').textContent = shortAddress;
+                    document.getElementById('mobileWalletText').textContent = shortAddress;
+                    document.getElementById('desktopConnectedState').classList.remove('hidden');
+                    document.getElementById('mobileConnectedState').classList.remove('hidden');
+                }
+            }
+        } catch (error) {
+            console.error("Error checking wallet status:", error);
+        }
+    });
+
+    // Listen for wallet changes
+    if (window.exodus) {
+        window.exodus.solana.on('accountChanged', async (newPublicKey) => {
+            if (newPublicKey) {
+                const shortAddress = `${newPublicKey.slice(0, 4)}...${newPublicKey.slice(-4)}`;
+                document.getElementById('desktopWalletText').textContent = shortAddress;
+                document.getElementById('mobileWalletText').textContent = shortAddress;
+                document.getElementById('desktopConnectedState').classList.remove('hidden');
+                document.getElementById('mobileConnectedState').classList.remove('hidden');
+            } else {
+                document.getElementById('desktopWalletText').textContent = 'Connect Exodus';
+                document.getElementById('mobileWalletText').textContent = 'Connect Exodus';
+                document.getElementById('desktopConnectedState').classList.add('hidden');
+                document.getElementById('mobileConnectedState').classList.add('hidden');
+            }
+        });
+    }
+    </script>
 </body>
 </html>
