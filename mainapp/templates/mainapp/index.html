@@ -353,7 +353,7 @@
                 </button>
             </div>
 
-            <!-- Mobile Hamburger Button - This should now be visible -->
+            <!-- Mobile Hamburger Button -->
             <button id="hamburgerBtn" 
                     class="block md:hidden p-2 text-purple-300 hover:text-purple-200"
                     onclick="toggleMobileMenu()">
@@ -364,19 +364,17 @@
         </div>
 
         <!-- Mobile Menu Dropdown -->
-        <div id="mobileMenu" class="hidden md:hidden absolute w-full bg-[#13073A]/95 backdrop-blur-xl border-b border-purple-500/10">
+        <div id="mobileMenu" class="hidden bg-[#13073A]/95 backdrop-blur-xl border-b border-purple-500/10">
             <div class="container mx-auto px-4 py-4">
-                <div class="flex flex-col space-y-4">
-                    <a href="/" class="text-purple-300 hover:text-purple-200 py-2">Launch</a>
-                    <a href="/guide" class="text-purple-300 hover:text-purple-200 py-2">Guide</a>
-                    <a href="/docs" class="text-purple-300 hover:text-purple-200 py-2">Docs</a>
-                    <div class="h-px bg-purple-500/20 my-2"></div>
-                    <button onclick="connectWallet()" 
-                            class="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-4 py-2 rounded-xl">
-                        <i class="ph-wallet"></i>
-                        <span>Connect Wallet</span>
-                    </button>
-                </div>
+                <a href="/" class="block py-3 text-purple-300 hover:text-purple-200">Launch</a>
+                <a href="/guide" class="block py-3 text-purple-300 hover:text-purple-200">Guide</a>
+                <a href="/docs" class="block py-3 text-purple-300 hover:text-purple-200">Docs</a>
+                <div class="h-px bg-purple-500/20 my-3"></div>
+                <button onclick="connectWallet()" 
+                        class="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-4 py-3 rounded-xl text-white flex items-center justify-center gap-2">
+                    <i class="ph-wallet"></i>
+                    <span>Connect Wallet</span>
+                </button>
             </div>
         </div>
     </nav>
@@ -1179,37 +1177,43 @@
     </script>
 
     <script>
-    function toggleMobileMenu() {
-        const mobileMenu = document.getElementById('mobileMenu');
+    // Wait for DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
         const hamburgerBtn = document.getElementById('hamburgerBtn');
-        
-        if (mobileMenu.classList.contains('hidden')) {
-            mobileMenu.classList.remove('hidden');
-            mobileMenu.classList.add('mobile-menu-show');
-        } else {
-            mobileMenu.classList.add('hidden');
-            mobileMenu.classList.remove('mobile-menu-show');
-        }
-    }
-
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
         const mobileMenu = document.getElementById('mobileMenu');
-        const hamburgerBtn = document.getElementById('hamburgerBtn');
 
-        if (!mobileMenu.contains(e.target) && !hamburgerBtn.contains(e.target) && !mobileMenu.classList.contains('hidden')) {
-            toggleMobileMenu();
-        }
-    });
-
-    // Close menu on window resize
-    window.addEventListener('resize', () => {
-        if (window.innerWidth >= 768) {
-            const mobileMenu = document.getElementById('mobileMenu');
-            if (!mobileMenu.classList.contains('hidden')) {
-                toggleMobileMenu();
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+                mobileMenu.classList.add('show');
+            } else {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('show');
             }
         }
+
+        // Add click event listener to hamburger button
+        hamburgerBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleMobileMenu();
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!mobileMenu.contains(e.target) && 
+                !hamburgerBtn.contains(e.target) && 
+                !mobileMenu.classList.contains('hidden')) {
+                toggleMobileMenu();
+            }
+        });
+
+        // Close menu on window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 768 && !mobileMenu.classList.contains('hidden')) {
+                toggleMobileMenu();
+            }
+        });
     });
     </script>
 
