@@ -38,3 +38,6 @@ EXPOSE 8000
 
 # Define the default command to run the Django application using Gunicorn
 CMD ["gunicorn", "myproject.wsgi:application", "--bind", "0.0.0.0:8000"]
+
+# Add to your Dockerfile before the CMD line
+RUN python manage.py collectstatic --noinput
