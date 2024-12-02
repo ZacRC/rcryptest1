@@ -21,30 +21,42 @@ docker compose up -d web
 echo "### Waiting for services to start..."
 sleep 45
 
-# Test the HTTP endpoint
+# Test the HTTP endpoint with verbose output
 echo "### Testing HTTP endpoint..."
-curl -I http://localhost:80
+curl -v http://localhost:80
+
+# Check if nginx is running
+echo "### Checking nginx status..."
+docker compose ps nginx
+docker compose logs nginx
 
 # Request staging certificate
 echo "### Requesting staging certificate..."
 docker compose run --rm --entrypoint "\
   certbot certonly --webroot -w /var/www/certbot \
   --staging \
+  -v \
   --email $email \
   --agree-tos \
   --no-eff-email \
   --force-renewal \
   -d solforge.live -d www.solforge.live" certbot
 
-# Request real certificate
-echo "### Requesting production certificate..."
-docker compose run --rm --entrypoint "\
-  certbot certonly --webroot -w /var/www/certbot \
-  --email $email \
-  --agree-tos \
-  --no-eff-email \
-  --force-renewal \
-  -d solforge.live -d www.solforge.live" certbot
+# Only proceed to production if staging was successful
+if [ $? -eq 0 ]; then
+  echo "### Requesting production certificate..."
+  docker compose run --rm --entrypoint "\
+    certbot certonly --webroot -w /var/www/certbot \
+    -v \
+    --email $email \
+    --agree-tos \
+    --no-eff-email \
+    --force-renewal \
+    -d solforge.live -d www.solforge.live" certbot
+else
+  echo "### Staging certificate request failed. Please fix issues before requesting production certificate."
+  exit 1
+fi
 
 # Restart nginx
 docker compose restart nginx
