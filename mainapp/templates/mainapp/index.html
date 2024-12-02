@@ -355,8 +355,7 @@
 
             <!-- Mobile Hamburger Button -->
             <button id="hamburgerBtn" 
-                    class="block md:hidden p-2 text-purple-300 hover:text-purple-200"
-                    onclick="toggleMobileMenu()">
+                    class="block md:hidden p-2 text-purple-300 hover:text-purple-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-16 6h16"/>
                 </svg>
@@ -1177,21 +1176,22 @@
     </script>
 
     <script>
-    // Wait for DOM to be fully loaded
+    // Make toggleMobileMenu globally available
+    window.toggleMobileMenu = function() {
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.remove('hidden');
+            mobileMenu.classList.add('show');
+        } else {
+            mobileMenu.classList.add('hidden');
+            mobileMenu.classList.remove('show');
+        }
+    }
+
+    // Add event listeners when document is ready
     document.addEventListener('DOMContentLoaded', function() {
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const mobileMenu = document.getElementById('mobileMenu');
-
-        // Toggle mobile menu
-        function toggleMobileMenu() {
-            if (mobileMenu.classList.contains('hidden')) {
-                mobileMenu.classList.remove('hidden');
-                mobileMenu.classList.add('show');
-            } else {
-                mobileMenu.classList.add('hidden');
-                mobileMenu.classList.remove('show');
-            }
-        }
 
         // Add click event listener to hamburger button
         hamburgerBtn.addEventListener('click', function(e) {
