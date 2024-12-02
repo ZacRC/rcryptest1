@@ -382,6 +382,14 @@
         .animate-pulse {
             animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
+
+        .wallet-button.connected {
+            @apply from-purple-700 to-purple-900;
+        }
+
+        .wallet-button .connected-indicator {
+            @apply absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse;
+        }
     </style>
 </head>
 <body class="text-gray-200">
@@ -1045,17 +1053,27 @@
             const resp = await window.exodus.solana.connect();
             wallet = resp.publicKey;
             
-            // Update wallet buttons
-            const walletButtons = ['walletButton', 'mobileWalletButton'];
-            walletButtons.forEach(buttonId => {
-                const button = document.getElementById(buttonId);
-                if (button) {
-                    button.innerHTML = `
-                        <i class="ph-wallet"></i>
-                        <span>${wallet.toString().slice(0, 4)}...${wallet.toString().slice(-4)}</span>
-                    `;
-                }
-            });
+            // Update desktop wallet button
+            const desktopWalletBtn = document.getElementById('desktopWalletBtn');
+            const desktopWalletText = document.getElementById('desktopWalletText');
+            const desktopConnectedState = document.getElementById('desktopConnectedState');
+            
+            if (desktopWalletBtn && desktopWalletText && desktopConnectedState) {
+                desktopWalletText.textContent = `${wallet.toString().slice(0, 4)}...${wallet.toString().slice(-4)}`;
+                desktopWalletBtn.classList.add('connected');
+                desktopConnectedState.classList.remove('hidden');
+            }
+
+            // Update mobile wallet button
+            const mobileWalletBtn = document.getElementById('mobileWalletBtn');
+            const mobileWalletText = document.getElementById('mobileWalletText');
+            const mobileConnectedState = document.getElementById('mobileConnectedState');
+            
+            if (mobileWalletBtn && mobileWalletText && mobileConnectedState) {
+                mobileWalletText.textContent = `${wallet.toString().slice(0, 4)}...${wallet.toString().slice(-4)}`;
+                mobileWalletBtn.classList.add('connected');
+                mobileConnectedState.classList.remove('hidden');
+            }
 
             // Initialize connection
             connection = new solanaWeb3.Connection(
@@ -1072,10 +1090,31 @@
         }
     }
 
-    // Function to generate a random Solana address (for demo purposes)
-    function generateRandomAddress() {
-        const keypair = solanaWeb3.Keypair.generate();
-        return keypair.publicKey;
+    // Add a function to check initial wallet state when page loads
+    async function checkWalletConnection() {
+        if (window.exodus && window.exodus.solana && window.exodus.solana.isConnected) {
+            try {
+                const publicKey = await window.exodus.solana.getPublicKey();
+                wallet = publicKey;
+                // Update UI to show connected state
+                const desktopWalletText = document.getElementById('desktopWalletText');
+                const desktopConnectedState = document.getElementById('desktopConnectedState');
+                const mobileWalletText = document.getElementById('mobileWalletText');
+                const mobileConnectedState = document.getElementById('mobileConnectedState');
+                
+                if (desktopWalletText && desktopConnectedState) {
+                    desktopWalletText.textContent = `${wallet.toString().slice(0, 4)}...${wallet.toString().slice(-4)}`;
+                    desktopConnectedState.classList.remove('hidden');
+                }
+                
+                if (mobileWalletText && mobileConnectedState) {
+                    mobileWalletText.textContent = `${wallet.toString().slice(0, 4)}...${wallet.toString().slice(-4)}`;
+                    mobileConnectedState.classList.remove('hidden');
+                }
+            } catch (err) {
+                console.error('Error checking wallet connection:', err);
+            }
+        }
     }
 
     // Enhanced image upload handling
@@ -1280,6 +1319,9 @@
                 toggleMobileMenu();
             }
         });
+
+        // Check initial wallet connection state
+        checkWalletConnection();
     });
     </script>
 
