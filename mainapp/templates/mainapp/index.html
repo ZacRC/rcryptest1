@@ -1225,5 +1225,102 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     </script>
+
+    <script>
+    // Add this function to check wallet connection status
+    function isWalletConnected() {
+        return window.exodus && window.exodus.solana && localStorage.getItem('walletConnected') === 'true';
+    }
+
+    // Update your deployToken function
+    async function deployToken() {
+        if (!isWalletConnected()) {
+            const connect = confirm("Please connect your wallet first. Would you like to connect now?");
+            if (connect) {
+                await connectWallet();
+            }
+            return;
+        }
+
+        try {
+            // Get the connected wallet
+            const provider = window.exodus.solana;
+            const connection = await provider.connect();
+            const publicKey = connection.publicKey.toString();
+
+            if (!publicKey) {
+                throw new Error("No wallet connected");
+            }
+
+            // Continue with token deployment
+            console.log("Deploying token with connected wallet:", publicKey);
+            // Your existing deployment logic here...
+            
+        } catch (error) {
+            console.error("Deploy error:", error);
+            alert("Failed to deploy token. Please ensure your wallet is connected and try again.");
+        }
+    }
+
+    // Update your connectWallet function to return a success status
+    async function connectWallet() {
+        try {
+            if (!window.exodus) {
+                alert("Please install Exodus Wallet");
+                return false;
+            }
+
+            const provider = window.exodus.solana;
+            
+            try {
+                const resp = await provider.connect();
+                const publicKey = resp.publicKey.toString();
+                
+                if (publicKey) {
+                    const shortAddress = `${publicKey.slice(0, 4)}...${publicKey.slice(-4)}`;
+                    document.getElementById('desktopWalletText').textContent = shortAddress;
+                    document.getElementById('mobileWalletText').textContent = shortAddress;
+                    document.getElementById('desktopConnectedState').classList.remove('hidden');
+                    document.getElementById('mobileConnectedState').classList.remove('hidden');
+                    
+                    localStorage.setItem('walletConnected', 'true');
+                    localStorage.setItem('walletAddress', shortAddress);
+                    return true;
+                }
+            } catch (err) {
+                console.error("Connection error:", err);
+                alert("Failed to connect. Please try again.");
+                return false;
+            }
+
+        } catch (error) {
+            console.error("Wallet connection error:", error);
+            alert("Failed to connect wallet. Please make sure Exodus is installed and try again.");
+            return false;
+        }
+        return false;
+    }
+
+    // Update your Create Token button onclick handler
+    document.getElementById('createTokenBtn').onclick = async function() {
+        if (isWalletConnected()) {
+            await deployToken();
+        } else {
+            const connect = confirm("Please connect your wallet first. Would you like to connect now?");
+            if (connect) {
+                const connected = await connectWallet();
+                if (connected) {
+                    await deployToken();
+                }
+            }
+        }
+    };
+    </script>
+
+    <!-- Update your Create Token button -->
+    <button id="createTokenBtn" 
+            class="w-full bg-gradient-to-r from-purple-600 to-green-500 hover:from-purple-700 hover:to-green-600 px-6 py-4 rounded-xl font-medium transition-all duration-300 sol-glow">
+        Create Token
+    </button>
 </body>
 </html>
