@@ -328,11 +328,42 @@
         .mobile-menu-show {
             display: block !important;
         }
+
+        /* Ensure mobile menu is above other content */
+        #mobileMenu {
+            position: fixed;
+            top: 72px;
+            left: 0;
+            right: 0;
+            background-color: #13073A;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+            z-index: 999;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Animation for mobile menu */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .menu-active {
+            display: block !important;
+            animation: slideDown 0.3s ease-out forwards;
+        }
     </style>
 </head>
 <body class="text-gray-200">
     <!-- Updated Navigation -->
-    <nav class="fixed top-0 left-0 right-0 bg-[#13073A]/80 backdrop-blur-xl border-b border-purple-500/10 z-50">
+    <nav class="fixed top-0 left-0 right-0 bg-[#13073A]/80 backdrop-blur-xl border-b border-purple-500/10 z-[1000]">
         <div class="container mx-auto px-4 h-[72px] flex items-center justify-between">
             <!-- Logo -->
             <div class="text-xl font-bold">
@@ -355,7 +386,7 @@
 
             <!-- Mobile Hamburger Button -->
             <button id="hamburgerBtn" 
-                    class="block md:hidden p-2 text-purple-300 hover:text-purple-200">
+                    class="block md:hidden p-2 text-purple-300 hover:text-purple-200 z-[1001]">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-16 6h16"/>
                 </svg>
@@ -363,17 +394,20 @@
         </div>
 
         <!-- Mobile Menu Dropdown -->
-        <div id="mobileMenu" class="hidden bg-[#13073A]/95 backdrop-blur-xl border-b border-purple-500/10">
+        <div id="mobileMenu" 
+             class="hidden fixed top-[72px] left-0 right-0 bg-[#13073A] border-b border-purple-500/10 shadow-lg z-[999] backdrop-blur-xl">
             <div class="container mx-auto px-4 py-4">
-                <a href="/" class="block py-3 text-purple-300 hover:text-purple-200">Launch</a>
-                <a href="/guide" class="block py-3 text-purple-300 hover:text-purple-200">Guide</a>
-                <a href="/docs" class="block py-3 text-purple-300 hover:text-purple-200">Docs</a>
-                <div class="h-px bg-purple-500/20 my-3"></div>
-                <button onclick="connectWallet()" 
-                        class="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-4 py-3 rounded-xl text-white flex items-center justify-center gap-2">
-                    <i class="ph-wallet"></i>
-                    <span>Connect Wallet</span>
-                </button>
+                <div class="flex flex-col space-y-4">
+                    <a href="/" class="block py-3 text-purple-300 hover:text-purple-200 text-lg">Launch</a>
+                    <a href="/guide" class="block py-3 text-purple-300 hover:text-purple-200 text-lg">Guide</a>
+                    <a href="/docs" class="block py-3 text-purple-300 hover:text-purple-200 text-lg">Docs</a>
+                    <div class="h-px bg-purple-500/20 my-3"></div>
+                    <button onclick="connectWallet()" 
+                            class="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-4 py-3 rounded-xl text-white flex items-center justify-center gap-2">
+                        <i class="ph-wallet"></i>
+                        <span>Connect Wallet</span>
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
@@ -1181,10 +1215,10 @@
         const mobileMenu = document.getElementById('mobileMenu');
         if (mobileMenu.classList.contains('hidden')) {
             mobileMenu.classList.remove('hidden');
-            mobileMenu.classList.add('show');
+            mobileMenu.classList.add('menu-active');
         } else {
             mobileMenu.classList.add('hidden');
-            mobileMenu.classList.remove('show');
+            mobileMenu.classList.remove('menu-active');
         }
     }
 
