@@ -306,60 +306,73 @@
         .mobile-menu-show {
             animation: slideDown 0.3s ease-out forwards;
         }
+
+        /* Ensure the hamburger button is visible */
+        #hamburgerBtn {
+            display: block !important;
+            z-index: 50;
+        }
+
+        @media (min-width: 768px) {
+            #hamburgerBtn {
+                display: none !important;
+            }
+        }
+
+        /* Mobile menu styles */
+        #mobileMenu {
+            top: 72px;
+            z-index: 40;
+        }
+
+        .mobile-menu-show {
+            display: block !important;
+        }
     </style>
 </head>
 <body class="text-gray-200">
     <!-- Updated Navigation -->
-    <nav class="fixed top-0 left-0 right-0 border-b border-purple-500/10 backdrop-blur-xl z-50">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex items-center justify-between">
-                <!-- Logo -->
-                <div class="text-xl font-bold bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent">
+    <nav class="fixed top-0 left-0 right-0 bg-[#13073A]/80 backdrop-blur-xl border-b border-purple-500/10 z-50">
+        <div class="container mx-auto px-4 h-[72px] flex items-center justify-between">
+            <!-- Logo -->
+            <div class="text-xl font-bold">
+                <span class="bg-gradient-to-r from-[#9945FF] to-[#14F195] bg-clip-text text-transparent">
                     SolForge
-                </div>
+                </span>
+            </div>
 
-                <!-- Desktop Navigation (hidden on mobile) -->
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="/" class="nav-link">Launch</a>
-                    <a href="/guide" class="nav-link">Guide</a>
-                    <a href="/docs" class="nav-link">Docs</a>
-                    <div class="h-4 w-px bg-purple-500/20"></div>
-                    <button onclick="connectWallet()" 
-                            id="walletButton"
-                            class="wallet-button">
-                        <i class="ph-wallet"></i>
-                        <span>Connect Wallet</span>
-                    </button>
-                </div>
-
-                <!-- Hamburger Menu Button (visible on mobile) -->
-                <button id="hamburgerBtn" 
-                        class="flex md:hidden items-center justify-center w-10 h-10 text-purple-300 hover:text-purple-200 focus:outline-none"
-                        onclick="toggleMobileMenu()">
-                    <i class="ph-list text-2xl"></i>
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="/" class="text-purple-300 hover:text-purple-200">Launch</a>
+                <a href="/guide" class="text-purple-300 hover:text-purple-200">Guide</a>
+                <a href="/docs" class="text-purple-300 hover:text-purple-200">Docs</a>
+                <div class="h-4 w-px bg-purple-500/20"></div>
+                <button onclick="connectWallet()" class="wallet-button">
+                    <i class="ph-wallet"></i>
+                    <span>Connect Wallet</span>
                 </button>
             </div>
+
+            <!-- Mobile Hamburger Button - This should now be visible -->
+            <button id="hamburgerBtn" 
+                    class="block md:hidden p-2 text-purple-300 hover:text-purple-200"
+                    onclick="toggleMobileMenu()">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-16 6h16"/>
+                </svg>
+            </button>
         </div>
 
         <!-- Mobile Menu Dropdown -->
-        <div id="mobileMenu" 
-             class="hidden absolute w-full bg-[#0d0926]/95 backdrop-blur-xl border-b border-purple-500/10 shadow-lg md:hidden">
-            <div class="container mx-auto p-4">
-                <div class="flex flex-col space-y-3">
-                    <a href="/" class="mobile-menu-item">
-                        <i class="ph-rocket-launch"></i>
-                        <span>Launch</span>
-                    </a>
-                    <a href="/guide" class="mobile-menu-item">
-                        <i class="ph-book-open"></i>
-                        <span>Guide</span>
-                    </a>
-                    <a href="/docs" class="mobile-menu-item">
-                        <i class="ph-file-text"></i>
-                        <span>Docs</span>
-                    </a>
+        <div id="mobileMenu" class="hidden md:hidden absolute w-full bg-[#13073A]/95 backdrop-blur-xl border-b border-purple-500/10">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex flex-col space-y-4">
+                    <a href="/" class="text-purple-300 hover:text-purple-200 py-2">Launch</a>
+                    <a href="/guide" class="text-purple-300 hover:text-purple-200 py-2">Guide</a>
+                    <a href="/docs" class="text-purple-300 hover:text-purple-200 py-2">Docs</a>
                     <div class="h-px bg-purple-500/20 my-2"></div>
-                    <button onclick="connectWallet()" class="mobile-wallet-btn">
+                    <button onclick="connectWallet()" 
+                            class="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-4 py-2 rounded-xl">
                         <i class="ph-wallet"></i>
                         <span>Connect Wallet</span>
                     </button>
@@ -1169,20 +1182,13 @@
     function toggleMobileMenu() {
         const mobileMenu = document.getElementById('mobileMenu');
         const hamburgerBtn = document.getElementById('hamburgerBtn');
-        const icon = hamburgerBtn.querySelector('i');
-
+        
         if (mobileMenu.classList.contains('hidden')) {
-            // Open menu
             mobileMenu.classList.remove('hidden');
             mobileMenu.classList.add('mobile-menu-show');
-            icon.classList.remove('ph-list');
-            icon.classList.add('ph-x');
         } else {
-            // Close menu
             mobileMenu.classList.add('hidden');
             mobileMenu.classList.remove('mobile-menu-show');
-            icon.classList.remove('ph-x');
-            icon.classList.add('ph-list');
         }
     }
 
@@ -1198,7 +1204,7 @@
 
     // Close menu on window resize
     window.addEventListener('resize', () => {
-        if (window.innerWidth >= 768) { // md breakpoint
+        if (window.innerWidth >= 768) {
             const mobileMenu = document.getElementById('mobileMenu');
             if (!mobileMenu.classList.contains('hidden')) {
                 toggleMobileMenu();
