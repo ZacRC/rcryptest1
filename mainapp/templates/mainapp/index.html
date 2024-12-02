@@ -1031,91 +1031,166 @@
         try {
             // Check if Exodus is installed
             if (!window.exodus) {
-                alert("Please install Exodus Wallet");
-                return;
+                window.open('https://exodus.com/', '_blank');
+                alert('Exodus wallet is not installed. Please install it from https://exodus.com/');
+                return false;
             }
 
-            // Check if already connected
-            const provider = window.exodus.solana;
+            // Clear any existing connection
+            if (window.exodus.solana && window.exodus.solana.isConnected) {
+                await window.exodus.solana.disconnect();
+            }
+
+            // Request connection to Exodus
+            const resp = await window.exodus.solana.connect();
+            wallet = resp.publicKey;
             
-            try {
-                // Connect to wallet
-                const resp = await provider.connect();
-                const publicKey = resp.publicKey.toString();
-                
-                if (publicKey) {
-                    // Update UI with connected wallet
-                    const shortAddress = `${publicKey.slice(0, 4)}...${publicKey.slice(-4)}`;
-                    document.getElementById('desktopWalletText').textContent = shortAddress;
-                    document.getElementById('mobileWalletText').textContent = shortAddress;
-                    document.getElementById('desktopConnectedState').classList.remove('hidden');
-                    document.getElementById('mobileConnectedState').classList.remove('hidden');
-                    
-                    // Store connection state
-                    localStorage.setItem('walletConnected', 'true');
-                    localStorage.setItem('walletAddress', shortAddress);
+            // Update wallet buttons
+            const walletButtons = ['walletButton', 'mobileWalletButton'];
+            walletButtons.forEach(buttonId => {
+                const button = document.getElementById(buttonId);
+                if (button) {
+                    button.innerHTML = `
+                        <i class="ph-wallet"></i>
+                        <span>${wallet.toString().slice(0, 4)}...${wallet.toString().slice(-4)}</span>
+                    `;
                 }
-            } catch (err) {
-                console.error("Connection error:", err);
-                alert("Failed to connect. Please try again.");
-            }
+            });
 
-        } catch (error) {
-            console.error("Wallet connection error:", error);
-            alert("Failed to connect wallet. Please make sure Exodus is installed and try again.");
+            // Initialize connection
+            connection = new solanaWeb3.Connection(
+                'https://api.devnet.solana.com',
+                'confirmed'
+            );
+
+            console.log('Connected to Solana:', wallet.toString());
+            return true;
+        } catch (err) {
+            console.error('Error connecting wallet:', err);
+            alert('Failed to connect wallet: ' + err.message);
+            return false;
         }
     }
 
-    // Check wallet connection on page load
-    document.addEventListener('DOMContentLoaded', async () => {
-        try {
-            // Check localStorage first
-            const isConnected = localStorage.getItem('walletConnected');
-            const savedAddress = localStorage.getItem('walletAddress');
+    // Function to generate a random Solana address (for demo purposes)
+    function generateRandomAddress() {
+        const keypair = solanaWeb3.Keypair.generate();
+        return keypair.publicKey;
+    }
+
+    // Enhanced image upload handling
+    function handleImageUpload(event) {
+        const input = event.target;
+        const uploadIcon = document.getElementById('uploadIcon');
+        const imagePreview = document.getElementById('imagePreview');
+        const container = document.getElementById('imagePreviewContainer');
+
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
             
-            if (isConnected === 'true' && savedAddress) {
-                document.getElementById('desktopWalletText').textContent = savedAddress;
-                document.getElementById('mobileWalletText').textContent = savedAddress;
-                document.getElementById('desktopConnectedState').classList.remove('hidden');
-                document.getElementById('mobileConnectedState').classList.remove('hidden');
+            // Validate file size and type
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size must be less than 5MB');
+                input.value = '';
+                return;
             }
 
-            // Then verify with actual wallet if available
-            if (window.exodus && window.exodus.solana) {
-                try {
-                    const resp = await window.exodus.solana.connect();
-                    const publicKey = resp.publicKey.toString();
-                    
-                    if (publicKey) {
-                        const shortAddress = `${publicKey.slice(0, 4)}...${publicKey.slice(-4)}`;
-                        document.getElementById('desktopWalletText').textContent = shortAddress;
-                        document.getElementById('mobileWalletText').textContent = shortAddress;
-                        document.getElementById('desktopConnectedState').classList.remove('hidden');
-                        document.getElementById('mobileConnectedState').classList.remove('hidden');
-                        localStorage.setItem('walletConnected', 'true');
-                        localStorage.setItem('walletAddress', shortAddress);
-                    }
-                } catch (err) {
-                    console.log("No existing connection");
-                    localStorage.removeItem('walletConnected');
-                    localStorage.removeItem('walletAddress');
-                }
+            if (!file.type.match('image.*')) {
+                alert('Please upload an image file');
+                input.value = '';
+                return;
             }
-        } catch (error) {
-            console.error("Error checking wallet status:", error);
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Create or update image preview
+                if (!imagePreview.querySelector('img')) {
+                    const img = document.createElement('img');
+                    img.className = 'w-full h-full object-cover rounded-xl';
+                    imagePreview.appendChild(img);
+                }
+                const previewImg = imagePreview.querySelector('img');
+                previewImg.src = e.target.result;
+                
+                // Show preview, hide upload icon
+                uploadIcon.classList.add('hidden');
+                imagePreview.classList.remove('hidden');
+                
+                // Add remove button
+                if (!container.querySelector('.remove-button')) {
+                    const removeButton = document.createElement('button');
+                    removeButton.className = 'remove-button absolute top-2 right-2 bg-red-500/80 hover:bg-red-600 rounded-full p-1 transition-all z-10';
+                    removeButton.innerHTML = '<i class="ph-x text-white"></i>';
+                    removeButton.onclick = resetUpload;
+                    container.appendChild(removeButton);
+                }
+            };
+            reader.readAsDataURL(file);
         }
+    }
+
+    // Reset image upload
+    function resetUpload(e) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        const uploadIcon = document.getElementById('uploadIcon');
+        const imagePreview = document.getElementById('imagePreview');
+        const container = document.getElementById('imagePreviewContainer');
+        const input = document.getElementById('logoInput');
+        const removeButton = container.querySelector('.remove-button');
+
+        input.value = '';
+        uploadIcon.classList.remove('hidden');
+        imagePreview.classList.add('hidden');
+        if (imagePreview.querySelector('img')) {
+            imagePreview.querySelector('img').remove();
+        }
+        if (removeButton) {
+            removeButton.remove();
+        }
+    }
+
+    // Add drag and drop support
+    const dropZone = document.getElementById('imagePreviewContainer');
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
     });
 
-    // Listen for wallet disconnection
-    if (window.exodus && window.exodus.solana) {
-        window.exodus.solana.on('disconnect', () => {
-            document.getElementById('desktopWalletText').textContent = 'Connect Exodus';
-            document.getElementById('mobileWalletText').textContent = 'Connect Exodus';
-            document.getElementById('desktopConnectedState').classList.add('hidden');
-            document.getElementById('mobileConnectedState').classList.add('hidden');
-            localStorage.removeItem('walletConnected');
-            localStorage.removeItem('walletAddress');
-        });
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        dropZone.classList.add('border-purple-500');
+    }
+
+    function unhighlight(e) {
+        dropZone.classList.remove('border-purple-500');
+    }
+
+    dropZone.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        if (files.length) {
+            const event = { target: { files: files } };
+            handleImageUpload(event);
+        }
     }
     </script>
 
@@ -1225,102 +1300,5 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     </script>
-
-    <script>
-    // Add this function to check wallet connection status
-    function isWalletConnected() {
-        return window.exodus && window.exodus.solana && localStorage.getItem('walletConnected') === 'true';
-    }
-
-    // Update your deployToken function
-    async function deployToken() {
-        if (!isWalletConnected()) {
-            const connect = confirm("Please connect your wallet first. Would you like to connect now?");
-            if (connect) {
-                await connectWallet();
-            }
-            return;
-        }
-
-        try {
-            // Get the connected wallet
-            const provider = window.exodus.solana;
-            const connection = await provider.connect();
-            const publicKey = connection.publicKey.toString();
-
-            if (!publicKey) {
-                throw new Error("No wallet connected");
-            }
-
-            // Continue with token deployment
-            console.log("Deploying token with connected wallet:", publicKey);
-            // Your existing deployment logic here...
-            
-        } catch (error) {
-            console.error("Deploy error:", error);
-            alert("Failed to deploy token. Please ensure your wallet is connected and try again.");
-        }
-    }
-
-    // Update your connectWallet function to return a success status
-    async function connectWallet() {
-        try {
-            if (!window.exodus) {
-                alert("Please install Exodus Wallet");
-                return false;
-            }
-
-            const provider = window.exodus.solana;
-            
-            try {
-                const resp = await provider.connect();
-                const publicKey = resp.publicKey.toString();
-                
-                if (publicKey) {
-                    const shortAddress = `${publicKey.slice(0, 4)}...${publicKey.slice(-4)}`;
-                    document.getElementById('desktopWalletText').textContent = shortAddress;
-                    document.getElementById('mobileWalletText').textContent = shortAddress;
-                    document.getElementById('desktopConnectedState').classList.remove('hidden');
-                    document.getElementById('mobileConnectedState').classList.remove('hidden');
-                    
-                    localStorage.setItem('walletConnected', 'true');
-                    localStorage.setItem('walletAddress', shortAddress);
-                    return true;
-                }
-            } catch (err) {
-                console.error("Connection error:", err);
-                alert("Failed to connect. Please try again.");
-                return false;
-            }
-
-        } catch (error) {
-            console.error("Wallet connection error:", error);
-            alert("Failed to connect wallet. Please make sure Exodus is installed and try again.");
-            return false;
-        }
-        return false;
-    }
-
-    // Update your Create Token button onclick handler
-    document.getElementById('createTokenBtn').onclick = async function() {
-        if (isWalletConnected()) {
-            await deployToken();
-        } else {
-            const connect = confirm("Please connect your wallet first. Would you like to connect now?");
-            if (connect) {
-                const connected = await connectWallet();
-                if (connected) {
-                    await deployToken();
-                }
-            }
-        }
-    };
-    </script>
-
-    <!-- Update your Create Token button -->
-    <button id="createTokenBtn" 
-            class="w-full bg-gradient-to-r from-purple-600 to-green-500 hover:from-purple-700 hover:to-green-600 px-6 py-4 rounded-xl font-medium transition-all duration-300 sol-glow">
-        Create Token
-    </button>
 </body>
 </html>
