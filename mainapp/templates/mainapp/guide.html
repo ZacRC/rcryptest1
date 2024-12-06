@@ -25,27 +25,133 @@
             background: linear-gradient(180deg, rgba(153, 69, 255, 0.3), rgba(20, 241, 149, 0.3));
             padding: 1px;
         }
+        /* Navbar Styles */
+        nav {
+            --nav-height: 72px;
+            height: var(--nav-height);
+            background: rgba(13, 9, 38, 0.8);
+            backdrop-filter: blur(12px);
+        }
+
+        /* Mobile Menu Button Styles */
+        #hamburgerBtn {
+            position: relative;
+            z-index: 60;
+        }
+
+        /* Mobile Menu Styles */
+        #mobileMenu {
+            position: fixed;
+            top: 72px;
+            left: 0;
+            right: 0;
+            background-color: #13073A;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+            z-index: 999;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Animation for mobile menu */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .menu-active {
+            display: block !important;
+            animation: slideDown 0.3s ease-out forwards;
+        }
+
+        /* Wallet Button Styles */
+        .wallet-button {
+            @apply bg-gradient-to-r from-purple-600 to-purple-800 
+                   hover:from-purple-700 hover:to-purple-900 
+                   px-4 py-2 rounded-xl transition-all duration-300 
+                   flex items-center gap-2 relative;
+        }
+
+        .wallet-button.connected {
+            @apply from-purple-700 to-purple-900;
+        }
+
+        /* Connected State Animation */
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        .wallet-button .connected-indicator {
+            @apply absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse;
+        }
     </style>
 </head>
 <body class="text-gray-200">
     <!-- Same Navigation as index.html -->
-    <nav class="border-b border-purple-500/10 backdrop-blur-xl fixed w-full z-10">
-        <div class="container mx-auto px-6 py-4">
-            <div class="flex justify-between items-center">
-                <div class="text-2xl font-bold bg-gradient-to-r from-purple-500 to-green-400 bg-clip-text text-transparent">
+    <nav class="fixed top-0 left-0 right-0 bg-[#13073A]/80 backdrop-blur-xl border-b border-purple-500/10 z-[1000]">
+        <div class="container mx-auto px-4 h-[72px] flex items-center justify-between">
+            <!-- Logo -->
+            <div class="text-xl font-bold">
+                <span class="bg-gradient-to-r from-[#9945FF] to-[#14F195] bg-clip-text text-transparent">
                     SolForge
-                </div>
-                <div class="flex items-center gap-6">
-                    <a href="/" class="text-purple-300 hover:text-purple-200 transition-colors">Launch</a>
-                    <a href="/guide" class="text-purple-300 hover:text-purple-200 transition-colors">Guide</a>
-                    <a href="/docs" class="text-purple-300 hover:text-purple-200 transition-colors">Docs</a>
-                    <div class="h-4 w-px bg-purple-500/20"></div>
-                    <span class="text-sm text-purple-300">Solana Network</span>
-                    <button onclick="connectWallet()" 
-                            id="walletButton"
-                            class="bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-6 py-2 rounded-xl transition-all duration-300 sol-glow flex items-center gap-2">
+                </span>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="/" class="text-purple-300 hover:text-purple-200">Launch</a>
+                <a href="/guide" class="text-purple-300 hover:text-purple-200">Guide</a>
+                <a href="/docs" class="text-purple-300 hover:text-purple-200">Docs</a>
+                <div class="h-4 w-px bg-purple-500/20"></div>
+                <button id="desktopWalletBtn" onclick="connectWallet()" 
+                        class="wallet-button group relative">
+                    <div class="flex items-center gap-2">
                         <i class="ph-wallet"></i>
-                        <span>Connect Wallet</span>
+                        <span id="desktopWalletText">Connect Exodus</span>
+                    </div>
+                    <div id="desktopConnectedState" class="hidden absolute -top-1 -right-1">
+                        <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Mobile Hamburger Button -->
+            <button id="hamburgerBtn" 
+                    class="block md:hidden p-2 text-purple-300 hover:text-purple-200 z-[1001]">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-16 6h16"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobileMenu" 
+             class="hidden fixed top-[72px] left-0 right-0 bg-[#13073A] border-b border-purple-500/10 shadow-lg z-[999] backdrop-blur-xl">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex flex-col space-y-4">
+                    <a href="/" class="block py-3 text-purple-300 hover:text-purple-200 text-lg">Launch</a>
+                    <a href="/guide" class="block py-3 text-purple-300 hover:text-purple-200 text-lg">Guide</a>
+                    <a href="/docs" class="block py-3 text-purple-300 hover:text-purple-200 text-lg">Docs</a>
+                    <div class="h-px bg-purple-500/20 my-3"></div>
+                    <button id="mobileWalletBtn" onclick="connectWallet()" 
+                            class="w-full bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 px-4 py-3 rounded-xl text-white flex items-center justify-center gap-2 relative">
+                        <i class="ph-wallet"></i>
+                        <span id="mobileWalletText">Connect Exodus</span>
+                        <div id="mobileConnectedState" class="hidden absolute -top-1 -right-1">
+                            <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                        </div>
                     </button>
                 </div>
             </div>
@@ -186,7 +292,27 @@
 
     <!-- Include the same wallet connection script as index.html -->
     <script>
-        // ... wallet connection code ...
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            function toggleMobileMenu() {
+                mobileMenu.classList.toggle('hidden');
+                mobileMenu.classList.toggle('menu-active');
+            }
+
+            hamburgerBtn.addEventListener('click', toggleMobileMenu);
+
+            // Close menu on window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 768 && !mobileMenu.classList.contains('hidden')) {
+                    toggleMobileMenu();
+                }
+            });
+
+            // Check initial wallet connection state
+            checkWalletConnection();
+        });
     </script>
 </body>
 </html>
